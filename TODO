@@ -1,0 +1,4 @@
+- [x] cache toolkit
+- [x] build wireguard pkg
+- [ ] build package for apollolake using static bin
+- [ ] add github releases
