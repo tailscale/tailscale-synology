@@ -1,11 +1,11 @@
 #!/bin/bash
 source /pkgscripts-ng/include/pkg_util.sh
 
-package="WireGuard"
-version="0.0.20191226"
-displayname="WireGuard"
-maintainer="Andreas Runfalk"
+package="tailscale"
+version="0.97-45"
+displayname="Tailscale"
+maintainer="nirev"
 arch="$(pkg_get_platform)"
-description="Adds WireGuard support for your Synology NAS."
+description="Connect all your devices using WireGuard, without the hassle."
 [ "$(caller)" != "0 NULL" ] && return 0
 pkg_dump_info

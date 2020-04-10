@@ -1,3 +1,7 @@
 #!/bin/bash
-ln -s $SYNOPKG_PKGDEST/wireguard/wg /usr/local/bin/
-ln -s $SYNOPKG_PKGDEST/wireguard/wg-quick /usr/local/bin/
+SOCKET_FILE="${SYNOPKG_PKGDEST}/var/tailscaled.sock"
+
+mkdir -p $SYNOPKG_PKGDEST/var
+echo "#!/bin/bash" >/usr/local/bin/tailscale
+echo "${SYNOPKG_PKGDEST}/bin/tailscale \$@ --socket=${SOCKET_FILE}" >>/usr/local/bin/tailscale
+chmod a+x /usr/local/bin/tailscale

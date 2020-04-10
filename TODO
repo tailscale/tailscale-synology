@@ -1,4 +1,5 @@
 - [x] cache toolkit
 - [x] build wireguard pkg
 - [ ] build package for apollolake using static bin
+- [ ] figure out how to do logging in Synology DSM
 - [ ] add github releases

@@ -9,6 +9,6 @@ RUN apt-get update \
 
 RUN git clone https://github.com/nirev/synology-pkgscripts-ng /pkgscripts-ng
 
-COPY build /source/WireGuard
+COPY build /source/tailscale
 
-ENTRYPOINT exec /source/WireGuard/build.sh
+ENTRYPOINT exec /source/tailscale/build.sh

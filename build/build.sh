@@ -41,14 +41,14 @@ set +e
 #   -S              no signing
 #   --build-opt=-J  prevent parallel building (required)
 #   --print-log     save build logs
-#   -c WireGuard    project path in /source
+#   -c tailscale    project path in /source
 pkgscripts-ng/PkgCreate.py \
     -p $PACKAGE_ARCH \
     -v $DSM_VER \
     -S \
     --build-opt=-J \
     --print-log \
-    -c WireGuard
+    -c tailscale
 
 # Save package builder exit code. This allows us to print the logfiles and give
 # a non-zero exit code on errors.
