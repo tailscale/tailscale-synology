@@ -8,7 +8,7 @@ tailscale-%:
 	@./build-package.sh ${TAILSCALE_VERSION} $*
 
 clean:
-	rm -rf _build
+	rm -rf _build _tailscale
 
 purge: clean
-	rm -rf spks _tailscale
+	rm -rf spks
