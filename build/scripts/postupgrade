@@ -1,0 +1,10 @@
+#!/bin/bash
+
+INST_LOG="/tmp/${SYNOPKG_PKGNAME}_install.log"
+INST_VAR="${SYNOPKG_PKGDEST}/var"
+TMP_DIR="${SYNOPKG_TEMP_UPGRADE_FOLDER}/var"
+
+echo "postupgrade" >>$INST_LOG
+
+echo "cp -rfp \"${TMP_DIR}\"/. \"${INST_VAR}\"" >>$INST_LOG
+cp -rfp "${TMP_DIR}"/. "${INST_VAR}" >>$INST_LOG

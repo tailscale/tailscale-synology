@@ -1,0 +1,15 @@
+#!/bin/bash
+
+INST_LOG="/tmp/${SYNOPKG_PKGNAME}_install.log"
+INST_VAR="${SYNOPKG_PKGDEST}/var"
+TMP_DIR="${SYNOPKG_TEMP_UPGRADE_FOLDER}/var"
+
+echo "preupgrade" >>$INST_LOG
+echo "rm -rf $TMP_DIR" >>$INST_LOG
+rm -rf $TMP_DIR
+
+echo "mkdir -p $TMP_DIR" >>$INST_LOG
+mkdir -p $TMP_DIR
+
+echo "cp -rfp \"${INST_VAR}\"/. \"${TMP_DIR}\"" >>$INST_LOG
+cp -rfp "${INST_VAR}"/. "${TMP_DIR}" >>$INST_LOG
