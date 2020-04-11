@@ -12,10 +12,10 @@ download_tailscale() {
   local dest_pkg="_tailscale/${pkg_name}"
   mkdir -p _tailscale
 
-  echo "> Downloading package: ${src_pkg}"
+  echo ">>> Downloading package: ${src_pkg}"
   wget --no-verbose -c ${src_pkg} -O ${dest_pkg}
 
-  echo "> Extracting.."
+  echo ">>> Extracting.."
   tar -xzf ${dest_pkg} -C _tailscale
 }
 
@@ -25,7 +25,7 @@ make_inner_pkg() {
   local dest_pkg="$dest_dir/package.tgz"
   local tailscale_dir="_tailscale/tailscale_${VERSION}_${ARCH}"
 
-  echo "> Making inner package.tgz"
+  echo ">>> Making inner package.tgz"
   mkdir -p ${tmp_dir}/bin
   cp -a ${tailscale_dir}/tailscale{,d} ${tmp_dir}/bin/
 
@@ -41,7 +41,7 @@ make_spk() {
   local pkg_size=$(cat ${spk_tmp_dir}/extractsize_tmp)
   local spk_dest_dir="./spks"
 
-  echo "> Making spk: ${spk_filename}"
+  echo ">>> Making spk: ${spk_filename}"
   mkdir -p ${spk_dest_dir}
   rm "${spk_tmp_dir}/extractsize_tmp"
 
@@ -62,8 +62,8 @@ make_pkg() {
 
   make_inner_pkg ${pkg_temp_dir} ${spk_temp_dir}
   make_spk ${spk_temp_dir}
-  echo "> Done"
-
+  echo ">> Done"
+  echo ""
   rm -rf ${spk_temp_dir} ${pkg_temp_dir}
 }
 

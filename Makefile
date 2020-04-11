@@ -2,7 +2,7 @@ TAILSCALE_VERSION := 0.97-45
 
 .PHONY: tailscale-% clean purge
 
-all: tailscale-amd64
+all: tailscale-amd64 tailscale-386 tailscale-arm64 tailscale-arm
 
 tailscale-%:
 	@./build-package.sh ${TAILSCALE_VERSION} $*
