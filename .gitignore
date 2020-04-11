@@ -1,2 +1,3 @@
-artifacts/
-toolkit/
+_build/
+_tailscale/
+spks/
