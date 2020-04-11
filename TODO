@@ -1,5 +1,6 @@
 - [x] cache toolkit
 - [x] build wireguard pkg
-- [ ] build package for apollolake using static bin
+- [x] build package for apollolake using static bin
 - [ ] figure out how to do logging in Synology DSM
 - [ ] add github releases
+- [ ] generate packages without docker and pkgscripts-ng

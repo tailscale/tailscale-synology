@@ -1,7 +1,6 @@
 # Tailscale package for Synology NAS
 
-This is a Synology NAS package for Tailscale.
-It is heavily based on [synology-wireguard](https://github.com/runfalk/synology-wireguard).
+Synology NAS package for Tailscale based on precompiled static binaries.
 
 ## Disclaimer
 
@@ -32,20 +31,16 @@ Check the [releases](https://github.com/nirev/synology-tailscale/releases)
 page for SPKs for your platform. If there is no SPK you have to compile
 it yourself using the instructions below.
 
-1.  In the Synology DSM web admin UI, open the Package Center and press
-    the *Settings* button.
-2.  Set the trust level to *Any publisher* and press *OK* to confirm.
-3.  Press the *Manual install* button and provide the SPK file.
-   Follow the instructions until done.
-
-At this point `tailscaled` should be up and running.
-So all you need to do is run `sudo tailscale up` and follow instructions.
-
+1.  In the Synology DSM web admin UI, open the Package Center.
+2.  Press the *Manual install* button and provide the SPK file.
+3.  Follow the wizard until done.
+4.  At this point `tailscaled` should be up and running.
+5.  SSH into the  machine, and run `sudo tailscale up` so you can authenticate.
 
 ## Compiling
 
-As said before, this is heavily based [synology-wireguard](https://github.com/runfalk/synology-wireguard).
-Likewise, everything is compiled inside docker, as Synology's package building tool `pkgscripts-ng`
+This repo is heavily based on [synology-wireguard](https://github.com/runfalk/synology-wireguard).
+Likewise, everything is assembled inside docker, as Synology's package building tool `pkgscripts-ng`
 clutters the file system quite a bit.
 
 First create the base docker image, which downloads `pkgscripts-ng`:
@@ -73,7 +68,6 @@ For the DS218+ that I have, the complete command looks like this:
 ```bash
 make build SYNO_PLATFORM=apollolake SYNO_DSM_VERSION=6.2
 ```
-
 
 If everything worked you should have a directory called `artifacts` that
 contains your SPK files.
