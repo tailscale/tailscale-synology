@@ -1,4 +1,4 @@
 #!/bin/bash
 . $(dirname $0)/installer
 
-postupgrade
+postuninst

@@ -1,7 +1,4 @@
 #!/bin/bash
-SOCKET_FILE="${SYNOPKG_PKGDEST}/var/tailscaled.sock"
+. $(dirname $0)/installer
 
-mkdir -p $SYNOPKG_PKGDEST/var
-echo "#!/bin/bash" >/usr/local/bin/tailscale
-echo "${SYNOPKG_PKGDEST}/bin/tailscale \$@ --socket=${SOCKET_FILE}" >>/usr/local/bin/tailscale
-chmod a+x /usr/local/bin/tailscale
+postinst

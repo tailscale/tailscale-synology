@@ -2,5 +2,5 @@
 - [x] build wireguard pkg
 - [x] build package for apollolake using static bin
 - [x] generate packages without docker and pkgscripts-ng
-- [ ] figure out how to do logging in Synology DSM
-- [ ] add github releases
+- [x] figure out how to do logging in Synology DSM
+- [ ] add github releases workflow

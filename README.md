@@ -33,11 +33,10 @@ it will work for you too.
 | DS1812+ | cedarview  | 6.2         | x64  | Yes      |
 
 
-Please not that the package is currently being generated based on
-Tailscale [static binaries](https://pkgs.tailscale.com/stable/#static)
-So if your NAS has any of the supported architectures (x86, x86_64, arm, arm64)
+Please note that the package is currently being generated based on
+Tailscale [static binaries](https://pkgs.tailscale.com/stable/#static), so
+if your NAS has any of the supported architectures (x86, x86_64, arm, arm64)
 it should theoretically work.
-
 
 ## Making packages
 

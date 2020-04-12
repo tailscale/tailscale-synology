@@ -1,0 +1,8 @@
+/var/packages/tailscale/target/var/tailscaled.log {
+  size 42M
+  rotate 3
+  missingok
+  copytruncate
+  compress
+  notifempty
+}

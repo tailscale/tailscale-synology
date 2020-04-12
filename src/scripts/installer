@@ -1,0 +1,47 @@
+#!/bin/bash
+
+INST_LOG="/tmp/tailscale_install.log"
+INST_VAR="${SYNOPKG_PKGDEST}/var"
+TMP_DIR="${SYNOPKG_TEMP_UPGRADE_FOLDER}/var"
+TARGET_PATH="/var/packages/${SYNOPKG_PKGNAME}/target"
+SOCKET_FILE="${SYNOPKG_PKGDEST}/var/tailscaled.sock"
+
+logstep() { # <step_name>
+  local date=$(date --iso-8601=second)
+  echo -e "\n>> ${date} :: $1" >>${INST_LOG} 2>&1
+}
+
+postinst() {
+  logstep "postinst"
+
+  mkdir -vp $TARGET_PATH/var >>${INST_LOG} 2>&1
+  echo "#!/bin/bash" >/usr/local/bin/tailscale
+  echo "${TARGET_PATH}/bin/tailscale \$@ --socket=${SOCKET_FILE}" >>/usr/local/bin/tailscale
+  chmod -v a+x /usr/local/bin/tailscale >>${INST_LOG} 2>&1
+
+  ln -sfv ${TARGET_PATH}/conf/logrotate.conf /usr/local/etc/logrotate.d/tailscaled >>${INST_LOG} 2>&1
+}
+
+postuninst() {
+  logstep "postuninst"
+
+  rm -v /usr/local/bin/tailscale >>${INST_LOG} 2>&1
+  rm -v /usr/local/etc/logrotate.d/tailscaled >>${INST_LOG} 2>&1
+}
+
+preupgrade() {
+  logstep "preupgrade"
+
+  rm -vrf $TMP_DIR >>${INST_LOG} 2>&1
+  mkdir -vp $TMP_DIR >>${INST_LOG} 2>&1
+
+  echo "cp -rfp \"${INST_VAR}\"/. \"${TMP_DIR}\"" >>$INST_LOG
+  cp -rfp "${INST_VAR}"/. "${TMP_DIR}" >>${INST_LOG} 2>&1
+}
+
+postupgrade() {
+  logstep "postupgrade"
+
+  echo "cp -rfp \"${TMP_DIR}\"/. \"${INST_VAR}\"" >>$INST_LOG
+  cp -vrfp "${TMP_DIR}"/. "${INST_VAR}" >>$INST_LOG 2>&1
+}
