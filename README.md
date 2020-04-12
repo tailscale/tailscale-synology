@@ -26,9 +26,11 @@ All models marked as *Is working* have been confirmed by users to work. If
 your model has the same platform as one of the working ones, chances are
 it will work for you too.
 
-| Model  | Platform   | DSM version | arch | Working? |
-| ------ | ---------- | ----------- | ---- | -------- |
-| DS218+ | apollolake | 6.2         | x64  | Yes      |
+| Model   | Platform   | DSM version | arch | Working? |
+| ------- | ---------- | ----------- | ---- | -------- |
+| DS214+  | armadaxp   | 6.2         | arm  | Yes      |
+| DS218+  | apollolake | 6.2         | x64  | Yes      |
+| DS1812+ | cedarview  | 6.2         | x64  | Yes      |
 
 
 Please not that the package is currently being generated based on
