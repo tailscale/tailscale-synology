@@ -4,3 +4,5 @@
 - [x] generate packages without docker and pkgscripts-ng
 - [x] figure out how to do logging in Synology DSM
 - [ ] add github releases workflow
+- [ ] get URL and send notification with `synodsmnotify`
+- [ ] create UI
