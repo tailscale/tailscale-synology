@@ -30,6 +30,7 @@ it will work for you too.
 | ------- | ---------- | ----------- | ---- | -------- |
 | DS214+  | armadaxp   | 6.2         | arm  | Yes      |
 | DS218+  | apollolake | 6.2         | x64  | Yes      |
+| DS916+  | braswell   | 6.2         | x64  | Yes      |
 | DS918+  | apollolake | 6.2         | x64  | Yes      |
 | DS1812+ | cedarview  | 6.2         | x64  | Yes      |
 
