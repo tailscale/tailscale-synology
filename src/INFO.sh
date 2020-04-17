@@ -22,7 +22,7 @@ arm64)
 arm)
   # which GOARM was used??? assuming GOARM=7
   # PLATFORMS_ARM5="88f6281 88f628x"
-  PLATFORMS="armv7 alpine armada370 armada375 armada38x armadaxp comcerto2k monaco hi3535 ipq806x northstarplus dakota"
+  PLATFORMS="armv5 armv7 alpine armada370 armada375 armada38x armadaxp comcerto2k monaco hi3535 ipq806x northstarplus dakota"
   ;;
 *)
   # PLATFORMS_PPC="powerpc ppc824x ppc853x ppc854x qoriq"

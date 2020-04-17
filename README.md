@@ -28,6 +28,7 @@ it will work for you too.
 
 | Model   | Platform   | DSM version | arch | Working? |
 | ------- | ---------- | ----------- | ---- | -------- |
+| DS212j  | armv5tel   | 6.2         | arm  | Yes      |
 | DS214+  | armadaxp   | 6.2         | arm  | Yes      |
 | DS218+  | apollolake | 6.2         | x64  | Yes      |
 | DS916+  | braswell   | 6.2         | x64  | Yes      |
