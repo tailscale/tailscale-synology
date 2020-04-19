@@ -17,12 +17,12 @@ amd64)
   PLATFORMS="evansport"
   ;;
 arm64)
-  PLATFORMS="aarch64 rtd1296 armada37xx"
+  PLATFORMS="aarch64 armv8 rtd1296 armada37xx"
   ;;
 arm)
-  # which GOARM was used??? assuming GOARM=7
-  # PLATFORMS_ARM5="88f6281 88f628x"
-  PLATFORMS="armv5 armv7 alpine armada370 armada375 armada38x armadaxp comcerto2k monaco hi3535 ipq806x northstarplus dakota"
+  PLATFORMS_ARM5="armv5 88f6281 88f628x"
+  PLATFORMS_ARM7="armv7 alpine armada370 armada375 armada38x armadaxp comcerto2k monaco hi3535 ipq806x northstarplus dakota"
+  PLATFORMS="${PLATFORMS_ARM5} ${PLATFORMS_ARM7}"
   ;;
 *)
   # PLATFORMS_PPC="powerpc ppc824x ppc853x ppc854x qoriq"
