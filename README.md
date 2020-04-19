@@ -26,15 +26,15 @@ All models marked as *Is working* have been confirmed by users to work. If
 your model has the same platform as one of the working ones, chances are
 it will work for you too.
 
-| Model   | Platform   | DSM version | arch | Working? |
-| ------- | ---------- | ----------- | ---- | -------- |
-| DS212j  | armv5tel   | 6.2         | arm  | Yes      |
-| DS214+  | armadaxp   | 6.2         | arm  | Yes      |
-| DS218+  | apollolake | 6.2         | x64  | Yes      |
-| DS916+  | braswell   | 6.2         | x64  | Yes      |
-| DS918+  | apollolake | 6.2         | x64  | Yes      |
-| DS1812+ | cedarview  | 6.2         | x64  | Yes      |
-
+| Model      | Platform   | DSM version | arch | Working? |
+| ---------  | ---------- | ----------- | ---- | -------- |
+| DS212j     | armv5tel   | 6.2         | arm  | Yes      |
+| DS214+     | armadaxp   | 6.2         | arm  | Yes      |
+| DS216play  | monaco     | 6.2         | arm  | Yes      |
+| DS218+     | apollolake | 6.2         | x64  | Yes      |
+| DS916+     | braswell   | 6.2         | x64  | Yes      |
+| DS918+     | apollolake | 6.2         | x64  | Yes      |
+| DS1812+    | cedarview  | 6.2         | x64  | Yes      |
 
 Please note that the package is currently being generated based on
 Tailscale [static binaries](https://pkgs.tailscale.com/stable/#static), so
