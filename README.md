@@ -35,6 +35,7 @@ it will work for you too.
 | DS916+     | braswell   | 6.2         | x64  | Yes      |
 | DS918+     | apollolake | 6.2         | x64  | Yes      |
 | DS1812+    | cedarview  | 6.2         | x64  | Yes      |
+| DS1815+    | avoton     | 6.2         | x64  | Yes      |
 
 Please note that the package is currently being generated based on
 Tailscale [static binaries](https://pkgs.tailscale.com/stable/#static), so
