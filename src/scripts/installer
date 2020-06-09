@@ -17,7 +17,7 @@ postinst() {
   mkdir -vp $TARGET_PATH/var >>${INST_LOG} 2>&1
   mkdir -vp /usr/local/bin >>${INST_LOG} 2>&1
   echo "#!/bin/bash" >/usr/local/bin/tailscale
-  echo "${TARGET_PATH}/bin/tailscale \$@ --socket=${SOCKET_FILE}" >>/usr/local/bin/tailscale
+  echo "${TARGET_PATH}/bin/tailscale --socket=${SOCKET_FILE} \$@" >>/usr/local/bin/tailscale
   chmod -v a+x /usr/local/bin/tailscale >>${INST_LOG} 2>&1
 
   ln -sfv ${TARGET_PATH}/conf/logrotate.conf /usr/local/etc/logrotate.d/tailscaled >>${INST_LOG} 2>&1
