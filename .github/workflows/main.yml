@@ -25,3 +25,9 @@ jobs:
     # Runs a single command using the runners shell
     - name: Run makescript
       run: make
+    - name: Release
+      uses: fnkr/github-action-ghr@v1
+      env:
+          GHR_PATH: spks/
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      
