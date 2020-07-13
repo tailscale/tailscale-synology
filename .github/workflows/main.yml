@@ -26,7 +26,7 @@ jobs:
     - name: Run makescript
       run: make
     - name: Release
-      if: github.event == 'push'
+      if: startsWith(github.ref, 'refs/tags/', 'origin/master')
       uses: fnkr/github-action-ghr@v1
       env:
           GHR_PATH: spks/
