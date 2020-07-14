@@ -10,6 +10,9 @@ on:
   pull_request:
     branches: [ master ]
   create:
+  release:
+    types: # This configuration does not affect the page_build event above
+      - created
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
