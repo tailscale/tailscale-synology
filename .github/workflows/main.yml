@@ -26,6 +26,10 @@ jobs:
     # Runs a single command using the runners shell
     - name: Run makescript
       run: make
+
+  release:
+    runs-on: ubuntu-latest
+    steps:
     - name: Info
       run: echo "Hello tag ${{ github.ref }}"
     - name: Release
