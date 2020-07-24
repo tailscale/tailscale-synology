@@ -32,6 +32,12 @@ jobs:
 
     - name: Info
       run: echo "Hello tag ${{ github.ref }}"
+
+    - name: Archive production artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: spks
+          path: spks
     
     - name: Release
       uses: fnkr/github-action-ghr@v1
