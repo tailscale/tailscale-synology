@@ -7,7 +7,7 @@ ARCH=$2
 SPK_BUILD=$3
 
 download_tailscale() {
-  local base_url="https://pkgs.tailscale.com/stable"
+  local base_url="https://pkgs.tailscale.com/unstable"
   local pkg_name="tailscale_${TAILSCALE_VERSION}_${ARCH}.tgz"
   local src_pkg="${base_url}/${pkg_name}"
   local dest_pkg="_tailscale/${pkg_name}"
