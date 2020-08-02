@@ -2,6 +2,8 @@
 
 Synology NAS package for Tailscale based on precompiled static binaries.
 
+![CI](https://github.com/nirev/synology-tailscale/workflows/CI/badge.svg)
+
 ## Disclaimer
 
 You use everything here at your own risk. I am not responsible if this
