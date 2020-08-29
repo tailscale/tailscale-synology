@@ -37,6 +37,7 @@ it will work for you too.
 | DS218+    | apollolake | 6.2         | x64  | Yes      |
 | DS220+    | geminilake | 6.2         | x64  | Yes      |
 | DS218j    | armada38x  | 6.2         | arm  | Yes      |
+| DS413j    | armv5tel   | 6.2         | arm  | Yes      |
 | DS415+    | avoton     | 6.2         | x64  | Yes      |
 | DS916+    | braswell   | 6.2         | x64  | Yes      |
 | DS918+    | apollolake | 6.2         | x64  | Yes      |
