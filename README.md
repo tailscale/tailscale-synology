@@ -44,7 +44,7 @@ it will work for you too.
 | DS920+    | geminilake | 6.2         | x64  | Yes      |
 | DS1812+   | cedarview  | 6.2         | x64  | Yes      |
 | DS1815+   | avoton     | 6.2         | x64  | Yes      |
-| DS2015xs  | annapurna  | 6.2         | arm  | Yes      |
+| DS2015xs  | alpine     | 6.2         | arm  | Yes      |
 
 Please note that the package is currently being generated based on
 Tailscale [static binaries](https://pkgs.tailscale.com/stable/#static), so
