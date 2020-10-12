@@ -36,6 +36,7 @@ it will work for you too.
 | DS216play | monaco     | 6.2         | arm  | Yes      |
 | DS218+    | apollolake | 6.2         | x64  | Yes      |
 | DS220+    | geminilake | 6.2         | x64  | Yes      |
+| DS220j    | RTD1296PBCG| 6.2         | arm  | Yes      |
 | DS218j    | armada38x  | 6.2         | arm  | Yes      |
 | DS413j    | armv5tel   | 6.2         | arm  | Yes      |
 | DS415+    | avoton     | 6.2         | x64  | Yes      |
