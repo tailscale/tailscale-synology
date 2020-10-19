@@ -1,4 +1,4 @@
-TAILSCALE_VERSION="0.100.0-202"
+TAILSCALE_VERSION="1.1.540"
 SPK_BUILD="1"
 
 .PHONY: tailscale-% clean purge
