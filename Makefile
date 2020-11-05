@@ -1,4 +1,5 @@
-TAILSCALE_VERSION="1.1.540"
+TAILSCALE_VERSION="1.2.1"
+TAILSCALE_TRACK="stable"
 SPK_BUILD="1"
 
 .PHONY: tailscale-% clean purge
@@ -6,7 +7,7 @@ SPK_BUILD="1"
 all: tailscale-amd64 tailscale-386 tailscale-arm64 tailscale-arm
 
 tailscale-%:
-	@./build-package.sh ${TAILSCALE_VERSION} $* ${SPK_BUILD}
+	@./build-package.sh ${TAILSCALE_TRACK} ${TAILSCALE_VERSION} $* ${SPK_BUILD}
 
 clean:
 	rm -rf _build _tailscale
