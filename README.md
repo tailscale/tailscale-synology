@@ -29,6 +29,7 @@ it will work for you too.
 
 | Model     | Platform   | DSM version | arch | Working? |
 | --------- | ---------- | ----------- | ---- | -------- |
+| DS115j    | armv7l     | 6.2         | arm  | Yes      |
 | DS212j    | armv5tel   | 6.2         | arm  | Yes      |
 | DS213j    | armada370  | 6.2         | arm  | Yes      |
 | DS215j    | armada375  | 6.2         | arm  | Yes      |
