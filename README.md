@@ -29,15 +29,16 @@ it will work for you too.
 
 | Model     | Platform   | DSM version | arch | Working? |
 | --------- | ---------- | ----------- | ----- | -------- |
+| DS115j    | armv7l     | 6.2         | arm   | Yes      |
 | DS212j    | armv5tel   | 6.2         | arm   | Yes      |
 | DS213j    | armada370  | 6.2         | arm   | Yes      |
 | DS215j    | armada375  | 6.2         | arm   | Yes      |
 | DS214+    | armadaxp   | 6.2         | arm   | Yes      |
 | DS216play | monaco     | 6.2         | arm   | Yes      |
 | DS218+    | apollolake | 6.2         | x64   | Yes      |
+| DS218j    | armada38x  | 6.2         | arm   | Yes      |
 | DS220+    | geminilake | 6.2         | x64   | Yes      |
 | DS220j    | rtd1296    | 6.2         | arm64 | Yes      |
-| DS218j    | armada38x  | 6.2         | arm   | Yes      |
 | DS413j    | armv5tel   | 6.2         | arm   | Yes      |
 | DS415+    | avoton     | 6.2         | x64   | Yes      |
 | DS916+    | braswell   | 6.2         | x64   | Yes      |
