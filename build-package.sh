@@ -2,12 +2,13 @@
 
 set -e
 
-TAILSCALE_VERSION=$1
-ARCH=$2
-SPK_BUILD=$3
+TAILSCALE_TRACK=$1
+TAILSCALE_VERSION=$2
+ARCH=$3
+SPK_BUILD=$4
 
 download_tailscale() {
-  local base_url="https://pkgs.tailscale.com/unstable"
+  local base_url="https://pkgs.tailscale.com/${TAILSCALE_TRACK}"
   local pkg_name="tailscale_${TAILSCALE_VERSION}_${ARCH}.tgz"
   local src_pkg="${base_url}/${pkg_name}"
   local dest_pkg="_tailscale/${pkg_name}"
