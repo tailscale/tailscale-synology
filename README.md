@@ -35,18 +35,21 @@ it will work for you too.
 | DS215j    | armada375  | 6.2         | arm   | Yes      |
 | DS214+    | armadaxp   | 6.2         | arm   | Yes      |
 | DS216play | monaco     | 6.2         | arm   | Yes      |
+| DS216se   | armada370  | 6.2         | arm   | Yes      |
 | DS218+    | apollolake | 6.2         | x64   | Yes      |
 | DS218j    | armada38x  | 6.2         | arm   | Yes      |
 | DS220+    | geminilake | 6.2         | x64   | Yes      |
 | DS220j    | rtd1296    | 6.2         | arm64 | Yes      |
 | DS413j    | armv5tel   | 6.2         | arm   | Yes      |
 | DS415+    | avoton     | 6.2         | x64   | Yes      |
+| DS720+    | geminilake | 6.2         | x64   | Yes      |
 | DS916+    | braswell   | 6.2         | x64   | Yes      |
 | DS918+    | apollolake | 6.2         | x64   | Yes      |
 | DS920+    | geminilake | 6.2         | x64   | Yes      |
 | DS1812+   | cedarview  | 6.2         | x64   | Yes      |
 | DS1815+   | avoton     | 6.2         | x64   | Yes      |
 | DS2015xs  | alpine     | 6.2         | arm   | Yes      |
+
 
 Please note that the package is currently being generated based on
 Tailscale [static binaries](https://pkgs.tailscale.com/stable/#static), so
