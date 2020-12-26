@@ -38,6 +38,7 @@ it will work for you too.
 | DS216se   | armada370  | 6.2         | arm   | Yes      |
 | DS218+    | apollolake | 6.2         | x64   | Yes      |
 | DS218j    | armada38x  | 6.2         | arm   | Yes      |
+| DS218play | rtd1296    | 6.2         | arm64 | Yes      | 
 | DS220+    | geminilake | 6.2         | x64   | Yes      |
 | DS220j    | rtd1296    | 6.2         | arm64 | Yes      |
 | DS413j    | armv5tel   | 6.2         | arm   | Yes      |
