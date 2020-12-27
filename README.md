@@ -43,6 +43,7 @@ it will work for you too.
 | DS220j    | rtd1296    | 6.2         | arm64 | Yes      |
 | DS413j    | armv5tel   | 6.2         | arm   | Yes      |
 | DS415+    | avoton     | 6.2         | x64   | Yes      |
+| DS418j    | rtd1293    | 6.2         | arm64 | Yes      |
 | DS420+    | geminilake | 6.2         | x64  | Yes      |
 | DS720+    | geminilake | 6.2         | x64   | Yes      |
 | DS916+    | braswell   | 6.2         | x64   | Yes      |
