@@ -1,3 +1,7 @@
+## v1.4.2 (2021-02-02)
+- tailscale v1.4.2 static binaries (stable)
+  [changelog](https://github.com/tailscale/tailscale/compare/v1.2.10...v1.4.2)
+
 ## v1.2.10 (2020-12-22)
 
 - tailscale v1.2.10 static binaries (stable) 
