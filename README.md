@@ -1,17 +1,16 @@
 # Tailscale package for Synology NAS
-![CI](https://github.com/nirev/synology-tailscale/workflows/CI/badge.svg)
+![CI](https://github.com/tailscale/tailscale-synology/workflows/CI/badge.svg)
 
 Synology NAS package for Tailscale based on precompiled static binaries.
 
 ## Disclaimer
 
-You use everything here at your own risk. I am not responsible if this
-breaks your NAS. Realistically it should not result in data loss or make
-your NAS unaccessible, but one never knows.
+You use everything here at your own risk. Make sure you have other network
+paths to your NAS before installing this, in case something goes wrong.
 
 ## Installation
 
-Check the [releases](https://github.com/nirev/synology-tailscale/releases)
+Check the [releases](https://github.com/tailscale/tailscale-synology/releases)
 page for SPKs for your platform. If there is no SPK you have to compile
 it yourself using the instructions below.
 
@@ -35,15 +34,15 @@ This project builds Synology packages "by hand", based on pre-compiled tailscale
 
 You can build the packages using `make`
 ```bash
-git clone https://github.com/nirev/synology-tailscale.git
-cd synology-tailscale/
+git clone https://github.com/tailscale/tailscale-synology.git
+cd tailscale-synology/
 make
 ```
 If everything worked you should have a directory called `spks` that contains your SPK files.
 
 ## Credits and References
 
-- [Tailscale](https://github.com/tailscale) for Tailscale
+- Thanks to [@nirev](https://github.com/nirev) for creating this project and transferring it to Tailscale's GitHub org.
 - https://haugene.github.io/docker-transmission-openvpn/synology-nas/ for the /dev/net/tun thing
 - Package structure: [Synology Package Developer Guide](https://help.synology.com/developer-guide/index.html)
 - Official Package building tool: [pkgscripts-ng](https://github.com/SynologyOpenSource/pkgscripts-ng)
