@@ -38,7 +38,7 @@ arch="${PLATFORMS}"
 description="Connect all your devices using WireGuard, without the hassle."
 displayname="Tailscale"
 maintainer="nirev"
-maintainer_url="https://github.com/nirev/synology-tailscale"
+maintainer_url="https://github.com/tailscale/tailscale-synology"
 create_time="${TIMESTAMP}"
 extractsize=${PKG_SIZE}
 EOF
