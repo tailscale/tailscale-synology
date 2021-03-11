@@ -10,7 +10,8 @@ PORT="41641"
 SERVICE_COMMAND="${SYNOPKG_PKGDEST}/bin/tailscaled \
 --state=${STATE_FILE} \
 --socket=${SOCKET_FILE} \
---port=$PORT"
+--port=$PORT \
+--debug=:6987"
 
 start_daemon() {
     local ts=$(date --iso-8601=second)

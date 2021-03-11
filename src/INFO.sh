@@ -32,13 +32,15 @@ arm)
 esac
 
 cat <<EOF
-package="tailscale"
+package="Tailscale"
 version="${VERSION}"
 arch="${PLATFORMS}"
 description="Connect all your devices using WireGuard, without the hassle."
 displayname="Tailscale"
-maintainer="nirev"
+maintainer="Tailscale"
 maintainer_url="https://github.com/tailscale/tailscale-synology"
 create_time="${TIMESTAMP}"
 extractsize=${PKG_SIZE}
+adminport="6987"
+thirdparty="yes"
 EOF
