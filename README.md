@@ -16,15 +16,14 @@ This repo's issue tracker is disabled. (And all historical issues have been move
 
 ## Installation
 
-Check the [releases](https://github.com/tailscale/tailscale-synology/releases)
-page for SPKs for your platform. If there is no SPK you have to compile
-it yourself using the instructions below.
+1.  Download precompiled [releases](https://github.com/tailscale/tailscale-synology/releases) from the page for SPKs for your platform. 
+2.  In the Synology DSM web admin UI, open the Package Center.
+3.  Press the *Manual install* button and provide the SPK file.
+4.  Follow the wizard until done.
+5.  At this point `tailscaled` should be up and running.
+6.  SSH into the  machine, and run `sudo tailscale up` so you can authenticate.
 
-1.  In the Synology DSM web admin UI, open the Package Center.
-2.  Press the *Manual install* button and provide the SPK file.
-3.  Follow the wizard until done.
-4.  At this point `tailscaled` should be up and running.
-5.  SSH into the  machine, and run `sudo tailscale up` so you can authenticate.
+> **_NOTE:_** If there is no SPK for your platform, you have to compile it yourself using the instructions [below](https://github.com/tailscale/tailscale-synology#making-packages).
 
 ## Compatibility
 
