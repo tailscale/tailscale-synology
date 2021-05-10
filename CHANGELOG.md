@@ -2,6 +2,7 @@
 - tailscale v1.8.0 static binaries (stable)
   [changelog](https://github.com/tailscale/tailscale/compare/v1.6.0...v1.8.0)
   [v1.8.0 release notes](https://github.com/tailscale/tailscale/releases/tag/v1.8.0)
+- Add Arch "geminilake" and the Property INFO "firmware"
   
 ## v1.6.0 (2021-03-17)
 - tailscale v1.6.0 static binaries (stable)
