@@ -11,7 +11,7 @@ TIMESTAMP=$(date -u +%Y%m%d-%H:%M:%S)
 # https://github.com/SynologyOpenSource/pkgscripts-ng/tree/master/include platform.<PLATFORM> files
 case $ARCH in
 amd64)
-  PLATFORMS="x64 x86 apollolake avoton braswell broadwell broadwellnk bromolow cedarview denverton dockerx64 geminilake grantley purley kvmx64 x86_64"
+  PLATFORMS="x64 x86 apollolake avoton braswell broadwell broadwellnk bromolow cedarview denverton dockerx64 geminilake grantley purley kvmx64 v1000 x86_64"
   ;;
 386)
   PLATFORMS="evansport"
