@@ -1,17 +1,26 @@
+## v1.8.3 (2021-05-10)
+- tailscale v1.8.3 static binaries (stable)
+  [changelog](https://github.com/tailscale/tailscale/compare/v1.6.0...v1.8.3)  
+  [v1.8.3 release notes](https://github.com/tailscale/tailscale/releases/tag/v1.8.3)  
+  [v1.8.2 release notes](https://github.com/tailscale/tailscale/releases/tag/v1.8.2)  
+  [v1.8.1 release notes](https://github.com/tailscale/tailscale/releases/tag/v1.8.1)  
+  [v1.8.0 release notes](https://github.com/tailscale/tailscale/releases/tag/v1.8.0)  
+
+- Add Arch "geminilake" and the Property INFO "firmware"
+  
 ## v1.6.0 (2021-03-17)
 - tailscale v1.6.0 static binaries (stable)
-  [changelog](https://github.com/tailscale/tailscale/compare/v1.4.5...v1.6.0)
+  [changelog](https://github.com/tailscale/tailscale/compare/v1.4.5...v1.6.0)  
   [v1.4.5 release notes](https://github.com/tailscale/tailscale/releases/tag/v1.6.0)
-
 
 ## v1.4.5 (2021-02-25)
 - tailscale v1.4.5 static binaries (stable)
-  [changelog](https://github.com/tailscale/tailscale/compare/v1.4.4...v1.4.5)
+  [changelog](https://github.com/tailscale/tailscale/compare/v1.4.4...v1.4.5)  
   [v1.4.5 release notes](https://github.com/tailscale/tailscale/releases/tag/v1.4.5)
 
 ## v1.4.4 (2021-02-16)
 - tailscale v1.4.4 static binaries (stable)
-  [changelog](https://github.com/tailscale/tailscale/compare/v1.4.2...v1.4.4)
+  [changelog](https://github.com/tailscale/tailscale/compare/v1.4.2...v1.4.4)  
   [v1.4.3 release notes](https://github.com/tailscale/tailscale/releases/tag/v1.4.3)
   [v1.4.4 release notes](https://github.com/tailscale/tailscale/releases/tag/v1.4.4)
 

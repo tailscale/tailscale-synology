@@ -11,7 +11,7 @@ TIMESTAMP=$(date -u +%Y%m%d-%H:%M:%S)
 # https://github.com/SynologyOpenSource/pkgscripts-ng/tree/master/include platform.<PLATFORM> files
 case $ARCH in
 amd64)
-  PLATFORMS="x64 x86 apollolake avoton braswell broadwell broadwellnk bromolow cedarview denverton dockerx64 grantley purley kvmx64 x86_64"
+  PLATFORMS="x64 x86 apollolake avoton braswell broadwell broadwellnk bromolow cedarview denverton dockerx64 geminilake grantley purley kvmx64 v1000 x86_64"
   ;;
 386)
   PLATFORMS="evansport"
@@ -38,6 +38,8 @@ arch="${PLATFORMS}"
 description="Connect all your devices using WireGuard, without the hassle."
 displayname="Tailscale"
 maintainer="nirev"
+os_min_ver="6.0-7321"
+os_max_ver="7.0-40000"
 maintainer_url="https://github.com/tailscale/tailscale-synology"
 create_time="${TIMESTAMP}"
 extractsize=${PKG_SIZE}
