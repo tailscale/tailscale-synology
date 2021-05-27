@@ -6,6 +6,7 @@ TAILSCALE_TRACK=$1
 TAILSCALE_VERSION=$2
 ARCH=$3
 SPK_BUILD=$4
+DSM_VERSION=$5
 
 download_tailscale() {
   local base_url="https://pkgs.tailscale.com/${TAILSCALE_TRACK}"
@@ -50,7 +51,7 @@ make_spk() {
   local spk_version="${TAILSCALE_VERSION}-${SPK_BUILD}"
   local spk_dest_dir="./spks"
   local pkg_size=$(cat ${spk_tmp_dir}/extractsize_tmp)
-  local spk_filename="tailscale-${ARCH}-${spk_version}.spk"
+  local spk_filename="tailscale-${ARCH}-${spk_version}-dsm${DSM_VERSION}.spk"
 
   echo ">>> Making spk: ${spk_filename}"
   mkdir -p ${spk_dest_dir}
@@ -59,9 +60,13 @@ make_spk() {
   # copy scripts and icon
   cp -ra src/scripts $spk_tmp_dir
   cp -a src/PACKAGE_ICON*.PNG $spk_tmp_dir
+  mkdir ${spk_tmp_dir}/conf
+  cp -a "src/privilege-dsm${DSM_VERSION}" ${spk_tmp_dir}/conf/privilege
+
+  cp -a src/Tailscale.sc ${spk_tmp_dir}/Tailscale.sc
 
   # Generate INFO file
-  ./src/INFO.sh "${spk_version}" ${ARCH} ${pkg_size} "6" >"${spk_tmp_dir}"/INFO
+  ./src/INFO.sh "${spk_version}" ${ARCH} ${pkg_size} "${DSM_VERSION}" >"${spk_tmp_dir}"/INFO
 
   tar -cf "${spk_dest_dir}/${spk_filename}" -C "${spk_tmp_dir}" $(ls ${spk_tmp_dir})
 }
@@ -79,7 +84,7 @@ make_pkg() {
 }
 
 main() {
-  echo "> Building package for TAILSCALE_VERSION=${TAILSCALE_VERSION} ARCH=${ARCH}"
+  echo "> Building package for TAILSCALE_VERSION=${TAILSCALE_VERSION} ARCH=${ARCH} DSM=${DSM_VERSION}"
   download_tailscale
   make_pkg
 }
