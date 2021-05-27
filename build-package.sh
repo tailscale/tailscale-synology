@@ -28,28 +28,29 @@ make_inner_pkg() {
   local tailscale_dir="_tailscale/tailscale_${TAILSCALE_VERSION}_${ARCH}"
 
   echo ">>> Making inner package.tgz"
-  mkdir -p ${tmp_dir}/bin
-  cp -a ${tailscale_dir}/tailscale{,d} ${tmp_dir}/bin/
+  mkdir -p "${tmp_dir}/bin"
+  cp -a ${tailscale_dir}/tailscale{,d} "${tmp_dir}/bin/"
 
-  mkdir -p ${tmp_dir}/conf
-  cp -a src/tailscaled_logrotate ${tmp_dir}/conf/logrotate.conf
+  mkdir -p "${tmp_dir}/ui"
+  cp -a src/config "${tmp_dir}/ui/"
+  cp -a src/PACKAGE_ICON_256.PNG "${tmp_dir}/ui/"
+  cp "${tailscale_dir}/tailscale" "${tmp_dir}/ui/index.cgi"
+
+  mkdir -p "${tmp_dir}/conf"
+  cp -a src/tailscaled_logrotate "${tmp_dir}/conf/logrotate.conf"
 
   pkg_size=$(du -sk "${tmp_dir}" | awk '{print $1}')
   echo "${pkg_size}" >>"$dest_dir/extractsize_tmp"
 
-  ls --color=no $tmp_dir | tar -cJf $dest_pkg -C "$tmp_dir" -T /dev/stdin
-}
-
-spk_build_part() {
-  [[ "${SPK_BUILD}" -gt "1" ]] && echo "_spkbuild${SPK_BUILD}"
+  ls --color=no "$tmp_dir" | tar -cJf $dest_pkg -C "$tmp_dir" -T /dev/stdin
 }
 
 make_spk() {
   local spk_tmp_dir=$1
-  local spk_build_part=$(spk_build_part)
+  local spk_version="${TAILSCALE_VERSION}-${SPK_BUILD}"
   local spk_dest_dir="./spks"
   local pkg_size=$(cat ${spk_tmp_dir}/extractsize_tmp)
-  local spk_filename="tailscale_${TAILSCALE_VERSION}${spk_build_part}_${ARCH}.spk"
+  local spk_filename="tailscale-${ARCH}-${spk_version}.spk"
 
   echo ">>> Making spk: ${spk_filename}"
   mkdir -p ${spk_dest_dir}
@@ -60,7 +61,7 @@ make_spk() {
   cp -a src/PACKAGE_ICON*.PNG $spk_tmp_dir
 
   # Generate INFO file
-  ./src/INFO.sh "${TAILSCALE_VERSION}${spk_build_part}" ${ARCH} ${pkg_size} >"${spk_tmp_dir}"/INFO
+  ./src/INFO.sh "${spk_version}" ${ARCH} ${pkg_size} "6" >"${spk_tmp_dir}"/INFO
 
   tar -cf "${spk_dest_dir}/${spk_filename}" -C "${spk_tmp_dir}" $(ls ${spk_tmp_dir})
 }

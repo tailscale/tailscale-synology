@@ -1,6 +1,6 @@
 TAILSCALE_VERSION="1.8.3"
 TAILSCALE_TRACK="stable"
-SPK_BUILD="1"
+SPK_BUILD="001"
 
 .PHONY: tailscale-% clean purge
 
