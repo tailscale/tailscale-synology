@@ -1,0 +1,8 @@
+{
+  "defaults":{
+    "run-as": "root"
+  },
+  "username": "tailscale",
+  "groupname": "tailscale",
+  "capabilities": "cap_net_admin"
+}
