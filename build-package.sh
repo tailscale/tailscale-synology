@@ -8,12 +8,41 @@ ARCH=$3
 SPK_BUILD=$4
 DSM_VERSION=$5
 
+# architecture taken from:
+# https://github.com/SynoCommunity/spksrc/wiki/Synology-and-SynoCommunity-Package-Architectures
+# https://github.com/SynologyOpenSource/pkgscripts-ng/tree/master/include platform.<PLATFORM> files
+case $ARCH in
+amd64)
+  PLATFORMS="x86_64"
+  ;;
+386)
+  PLATFORMS="i686"
+  ;;
+arm64)
+  PLATFORMS="armv8"
+  ;;
+arm)
+  PLATFORMS="armv7 armada370 armada375 armada38x armadaxp comcerto2k monaco"
+  ;;
+*)
+  # PLATFORMS_PPC="powerpc ppc824x ppc853x ppc854x qoriq"
+  echo "Unsupported architecture: ${ARCH}"
+  exit 1
+  ;;
+esac
+
 download_tailscale() {
   local base_url="https://pkgs.tailscale.com/${TAILSCALE_TRACK}"
   local pkg_name="tailscale_${TAILSCALE_VERSION}_${ARCH}.tgz"
   local src_pkg="${base_url}/${pkg_name}"
   local dest_pkg="_tailscale/${pkg_name}"
+  local dest_dir="_tailscale/tailscale_${TAILSCALE_VERSION}_${ARCH}"
   mkdir -p _tailscale
+
+  if [[ -f ${dest_dir}/tailscale ]]; then
+    echo ">>> Package already extracted: ${pkg_name}"
+    return
+  fi
 
   echo ">>> Downloading package: ${src_pkg}"
   wget --no-verbose -c ${src_pkg} -O ${dest_pkg}
@@ -51,9 +80,6 @@ make_spk() {
   local spk_version="${TAILSCALE_VERSION}-${SPK_BUILD}"
   local spk_dest_dir="./spks"
   local pkg_size=$(cat ${spk_tmp_dir}/extractsize_tmp)
-  local spk_filename="tailscale-${ARCH}-${spk_version}-dsm${DSM_VERSION}.spk"
-
-  echo ">>> Making spk: ${spk_filename}"
   mkdir -p ${spk_dest_dir}
   rm "${spk_tmp_dir}/extractsize_tmp"
 
@@ -66,9 +92,13 @@ make_spk() {
   cp -a src/Tailscale.sc ${spk_tmp_dir}/Tailscale.sc
 
   # Generate INFO file
-  ./src/INFO.sh "${spk_version}" ${ARCH} ${pkg_size} "${DSM_VERSION}" >"${spk_tmp_dir}"/INFO
+  for platform in $PLATFORMS; do
+    local spk_filename="tailscale-${platform}-${spk_version}-dsm${DSM_VERSION}.spk"
 
-  tar -cf "${spk_dest_dir}/${spk_filename}" -C "${spk_tmp_dir}" $(ls ${spk_tmp_dir})
+    echo ">>> Making spk: ${spk_filename}"
+    ./src/INFO.sh "${spk_version}" ${platform} ${pkg_size} "${DSM_VERSION}" >"${spk_tmp_dir}"/INFO
+    tar -cf "${spk_dest_dir}/${spk_filename}" -C "${spk_tmp_dir}" $(ls ${spk_tmp_dir})
+  done
 }
 
 make_pkg() {
