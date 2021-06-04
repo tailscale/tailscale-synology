@@ -1,12 +1,9 @@
-#!/bin/sh
+#!/bin/bash
 
 SERVICE_NAME="tailscale"
 
-SYNOPKG_PKGVAR="${SYNOPKG_PKGVAR:-${SYNOPKG_PKGDEST}/var}"
-
-if [ "${SYNOPKG_DSM_VERSION_MAJOR}"=="6" ]; then
-    PKGVAR="${SYNOPKG_PKGDEST}/var"
-    mkdir -p "${PKGVAR}"
+if [ "${SYNOPKG_DSM_VERSION_MAJOR}" -eq "6" ]; then
+    PKGVAR="/var/packages/Tailscale/etc"
 else
     PKGVAR="${SYNOPKG_PKGVAR}"
 fi
