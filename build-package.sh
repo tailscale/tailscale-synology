@@ -8,6 +8,10 @@ ARCH=$3
 SPK_BUILD=$4
 DSM_VERSION=$5
 
+if [[ $DSM_VERSION -eq "7" ]]; then
+  SPK_BUILD=$(($SPK_BUILD + 2000))
+fi
+
 # architecture taken from:
 # https://github.com/SynoCommunity/spksrc/wiki/Synology-and-SynoCommunity-Package-Architectures
 # https://github.com/SynologyOpenSource/pkgscripts-ng/tree/master/include platform.<PLATFORM> files
@@ -68,6 +72,7 @@ make_inner_pkg() {
 
   mkdir -p "${tmp_dir}/conf"
   cp -a src/tailscaled_logrotate "${tmp_dir}/conf/logrotate.conf"
+  cp -a src/Tailscale.sc ${tmp_dir}/conf/Tailscale.sc
 
   pkg_size=$(du -sk "${tmp_dir}" | awk '{print $1}')
   echo "${pkg_size}" >>"$dest_dir/extractsize_tmp"
@@ -88,6 +93,7 @@ make_spk() {
   cp -a src/PACKAGE_ICON*.PNG $spk_tmp_dir
   mkdir ${spk_tmp_dir}/conf
   cp -a "src/privilege-dsm${DSM_VERSION}" ${spk_tmp_dir}/conf/privilege
+  cp -a "src/resource" ${spk_tmp_dir}/conf/resource
 
   cp -a src/Tailscale.sc ${spk_tmp_dir}/Tailscale.sc
 
