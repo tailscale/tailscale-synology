@@ -19,6 +19,11 @@ SERVICE_COMMAND="${SYNOPKG_PKGDEST}/bin/tailscaled \
 --socket=${SOCKET_FILE} \
 --port=$PORT"
 
+if [ "${SYNOPKG_DSM_VERSION_MAJOR}" -eq "7" -a ! -e "/dev/net/tun" ]; then
+    # TODO(maisem/crawshaw): Disable the tun device in DSM7 for now.
+    SERVICE_COMMAND="${SERVICE_COMMAND} --tun=userspace-networking"
+fi
+
 start_daemon() {
     local ts=$(date --iso-8601=second)
     echo "${ts} Starting ${SERVICE_NAME} with: ${SERVICE_COMMAND}" >${LOG_FILE}
@@ -62,6 +67,10 @@ wait_for_status() {
 }
 
 ensure_tun_created() {
+    if [ "${SYNOPKG_DSM_VERSION_MAJOR}" -eq "7" ]; then
+        # TODO(maisem/crawshaw): Disable the tun device in DSM7 for now.
+        return
+    fi
     # Create the necessary file structure for /dev/net/tun
     if ([ ! -c /dev/net/tun ]); then
         if ([ ! -d /dev/net ]); then
