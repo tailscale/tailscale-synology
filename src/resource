@@ -1,5 +1,8 @@
 {
 	"port-config": {
 		"protocol-file": "conf/Tailscale.sc"
+	},
+	"usr-local-linker": {
+		"bin": ["bin/tailscale"]
 	}
 }
