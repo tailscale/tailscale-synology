@@ -25,6 +25,10 @@ This repo's issue tracker is disabled. (And all historical issues have been move
 
 > **_NOTE:_** If there is no SPK for your platform, you have to compile it yourself using the instructions [below](https://github.com/tailscale/tailscale-synology#making-packages).
 
+## Upgrading
+
+If upgrading to version v1.10.0, you may end up with duplicate installations of Tailscale. This is a [known](https://github.com/tailscale/tailscale/issues/2266#issuecomment-869792505) side effect of some metadata changes that were made in v1.10.0 in preparation of the installation package to be listed in the Synology Package Center. It is recommended to uninstall the old Tailscale package first before upgrading to v1.10.0. Please note that your devices Tailscale IP may change when v1.10.0 is installed.
+
 ## Compatibility
 
 The current package is confirmed to be working in different Synology models and architectures.
