@@ -26,7 +26,9 @@ arm64)
   PLATFORMS="armv8"
   ;;
 arm)
-  PLATFORMS="armv7 armada370 armada375 armada38x armadaxp comcerto2k monaco"
+  PLATFORMS_ARM5="armv5 88f6281 88f6282"
+  PLATFORMS_ARM7="armv7 alpine armada370 armada375 armada38x armadaxp comcerto2k monaco hi3535"
+  PLATFORMS="${PLATFORMS_ARM5} ${PLATFORMS_ARM7}"
   ;;
 *)
   # PLATFORMS_PPC="powerpc ppc824x ppc853x ppc854x qoriq"
