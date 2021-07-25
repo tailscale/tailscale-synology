@@ -44,7 +44,7 @@ Ref: [Issue #1995](https://github.com/tailscale/tailscale/issues/1995)
 Things currently not supported on Synology are:
 
 - any tailscale up `--netfilter-mode=XXX` value other than `off`.
-- 
+- To enable exit node/subnet router, consider using the `--reset` command, e.g. `sudo tailscale up --advertise-routes=192.168.1.0/24 --advertise-exit-node --reset`. The non-default setting `--accept-routes` is not supported on synology.
 
 ## Making packages
 
