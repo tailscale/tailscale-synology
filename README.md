@@ -31,11 +31,21 @@ If upgrading to version v1.10.0, you may end up with duplicate installations of 
 
 ## Compatibility
 
-The current package is confirmed to be working in different Synology models and architectures.
+The current package is confirmed to be working in different Synology models and architectures. [Some features](#synology-limitations) are currently not available.
 
 The package is created based on Tailscale [static binaries](https://pkgs.tailscale.com/stable/#static), and if your NAS has any of the supported architectures (x86, x86_64, arm, arm64) it should _just_ work.
 
 If in doubt, check the [synology model list](docs/platforms.md) for the matching architecture.
+
+### Synology Limitations
+
+Ref: [Issue #1995](https://github.com/tailscale/tailscale/issues/1995)
+
+Things currently not supported on Synology are:
+
+- `tailscale up --accept-routes`, as we don't mess with the routing table or use iptables.
+- hosting exit node (for the same reason)
+- any tailscale up `--netfilter-mode=XXX` value other than `off`.
 
 ## Making packages
 
