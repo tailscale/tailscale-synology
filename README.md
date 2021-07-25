@@ -43,9 +43,8 @@ Ref: [Issue #1995](https://github.com/tailscale/tailscale/issues/1995)
 
 Things currently not supported on Synology are:
 
-- `tailscale up --accept-routes`, as we don't mess with the routing table or use iptables.
-- hosting exit node (for the same reason)
 - any tailscale up `--netfilter-mode=XXX` value other than `off`.
+- 
 
 ## Making packages
 
