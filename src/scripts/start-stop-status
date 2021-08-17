@@ -24,6 +24,10 @@ if [ "${SYNOPKG_DSM_VERSION_MAJOR}" -eq "7" -a ! -e "/dev/net/tun" ]; then
     SERVICE_COMMAND="${SERVICE_COMMAND} --tun=userspace-networking"
 fi
 
+if [ "${SYNOPKG_DSM_VERSION_MAJOR}" -eq "6" ]; then
+    chown -R tailscale:tailscale "${PKGVAR}/"
+fi
+
 start_daemon() {
     local ts=$(date --iso-8601=second)
     echo "${ts} Starting ${SERVICE_NAME} with: ${SERVICE_COMMAND}" >${LOG_FILE}

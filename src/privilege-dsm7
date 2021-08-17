@@ -4,5 +4,10 @@
   },
   "username": "tailscale",
   "groupname": "tailscale",
-  "capabilities": "cap_net_admin"
+  "tool": [{
+    "relpath": "bin/tailscaled",
+    "user": "package",
+    "group": "package",
+    "capabilities": "cap_net_admin,cap_chown"
+  }]
 }
