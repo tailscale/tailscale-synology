@@ -15,3 +15,6 @@ clean:
 
 purge: clean
 	rm -rf spks
+
+build-using-docker:
+	docker run -v `pwd`:/project -w /project buildpack-deps:latest make

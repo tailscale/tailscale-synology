@@ -49,6 +49,14 @@ make
 ```
 If everything worked you should have a directory called `spks` that contains your SPK files.
 
+### Building on MacOSX
+
+The build scripts currently aren't compatible with MacOSX, as an alternative you can build using [Docker](https://www.docker.com).
+
+```bash
+make build-using-docker
+```
+
 ## Credits and References
 
 - Thanks to [@nirev](https://github.com/nirev) for creating this project and transferring it to Tailscale's GitHub org.
