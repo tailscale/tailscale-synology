@@ -49,7 +49,7 @@ stop_daemon() {
 daemon_status() {
     if [ -r "${PID_FILE}" ]; then
         local PID=$(cat "${PID_FILE}")
-        if "$(ps -o pid -p ${PID} 2> /dev/null)"; then
+        if ps -o pid -p ${PID} > /dev/null; then
             return
         fi
         rm -f "${PID_FILE}" >/dev/null
