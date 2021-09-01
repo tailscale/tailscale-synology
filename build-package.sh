@@ -7,9 +7,15 @@ TAILSCALE_VERSION=$2
 ARCH=$3
 SPK_BUILD=$4
 DSM_VERSION=$5
+PACKAGE_CENTER_VERSION=$6
+
+PRIVILEGE_FILE="src/privilege-dsm${DSM_VERSION}"
 
 if [[ $DSM_VERSION -eq "7" ]]; then
   SPK_BUILD=$(($SPK_BUILD + 2000))
+  if [[ $PACKAGE_CENTER_VERSION == "true" ]]; then
+    PRIVILEGE_FILE="src/privilege-dsm7.priv"
+  fi
 fi
 
 # architecture taken from:
@@ -26,9 +32,13 @@ arm64)
   PLATFORMS="armv8"
   ;;
 arm)
-  PLATFORMS_ARM5="armv5 88f6281 88f6282"
-  PLATFORMS_ARM7="armv7 alpine armada370 armada375 armada38x armadaxp comcerto2k monaco hi3535"
-  PLATFORMS="${PLATFORMS_ARM5} ${PLATFORMS_ARM7}"
+  if [[ $PACKAGE_CENTER_VERSION == "true" ]]; then
+    PLATFORMS_ARM5="armv5 88f6281 88f6282"
+    PLATFORMS_ARM7="armv7 alpine armada370 armada375 armada38x armadaxp comcerto2k monaco hi3535"
+    PLATFORMS="${PLATFORMS_ARM5} ${PLATFORMS_ARM7}"
+  else
+    PLATFORMS="armv5 armv7"
+  fi
   ;;
 *)
   # PLATFORMS_PPC="powerpc ppc824x ppc853x ppc854x qoriq"
@@ -94,7 +104,7 @@ make_spk() {
   cp -ra src/scripts $spk_tmp_dir
   cp -a src/PACKAGE_ICON*.PNG $spk_tmp_dir
   mkdir ${spk_tmp_dir}/conf
-  cp -a "src/privilege-dsm${DSM_VERSION}" ${spk_tmp_dir}/conf/privilege
+  cp -a ${PRIVILEGE_FILE} ${spk_tmp_dir}/conf/privilege
   cp -a "src/resource" ${spk_tmp_dir}/conf/resource
 
   cp -a src/Tailscale.sc ${spk_tmp_dir}/Tailscale.sc
