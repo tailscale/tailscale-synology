@@ -49,6 +49,8 @@ make
 ```
 If everything worked you should have a directory called `spks` that contains your SPK files.
 
+> **_NOTE:_** For building on macOS the GNU core utilites are required. Homebrew users can run `brew install coreutils` and set the `PATH` variable accordingly.
+
 ## Credits and References
 
 - Thanks to [@nirev](https://github.com/nirev) for creating this project and transferring it to Tailscale's GitHub org.
