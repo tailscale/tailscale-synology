@@ -1,7 +1,7 @@
-TAILSCALE_VERSION ?= "1.14.3"
+TAILSCALE_VERSION ?= "1.14.4"
 TAILSCALE_TRACK = "stable"
 # This needs to be monotinically increasing regardless of the TAILSCALE_VERSION
-SPK_BUILD = 8
+SPK_BUILD = 9
 
 .PHONY: tailscale-% clean purge
 
