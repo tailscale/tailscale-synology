@@ -34,13 +34,9 @@ arm64)
   PLATFORMS="armv8"
   ;;
 arm)
-  if [[ $PACKAGE_CENTER_VERSION == "true" ]]; then
-    PLATFORMS_ARM5="armv5 88f6281 88f6282"
-    PLATFORMS_ARM7="armv7 alpine armada370 armada375 armada38x armadaxp comcerto2k monaco hi3535"
-    PLATFORMS="${PLATFORMS_ARM5} ${PLATFORMS_ARM7}"
-  else
-    PLATFORMS="armv5 armv7"
-  fi
+  PLATFORMS_ARM5="armv5 88f6281 88f6282"
+  PLATFORMS_ARM7="armv7 alpine armada370 armada375 armada38x armadaxp comcerto2k monaco hi3535"
+  PLATFORMS="${PLATFORMS_ARM5} ${PLATFORMS_ARM7}"
   ;;
 *)
   # PLATFORMS_PPC="powerpc ppc824x ppc853x ppc854x qoriq"
