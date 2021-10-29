@@ -10,6 +10,7 @@ DSM_VERSION=$5
 PACKAGE_CENTER_VERSION=$6
 
 PRIVILEGE_FILE="src/privilege-dsm${DSM_VERSION}"
+LOGROTATE_FILE="src/logrotate-dsm${DSM_VERSION}"
 
 if [[ $DSM_VERSION -eq "7" ]]; then
   SPK_BUILD=$(($SPK_BUILD + 2000))
@@ -81,7 +82,7 @@ make_inner_pkg() {
   cp "${tailscale_dir}/tailscale" "${tmp_dir}/ui/index.cgi"
 
   mkdir -p "${tmp_dir}/conf"
-  cp -a src/tailscaled_logrotate "${tmp_dir}/conf/logrotate.conf"
+  cp -a "${LOGROTATE_FILE}" "${tmp_dir}/conf/logrotate.conf"
   cp -a src/Tailscale.sc ${tmp_dir}/conf/Tailscale.sc
 
   pkg_size=$(du -sk "${tmp_dir}" | awk '{print $1}')

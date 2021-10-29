@@ -1,5 +1,5 @@
-/var/packages/tailscale/target/var/tailscaled.log {
-  size 42M
+/var/packages/Tailscale/etc/tailscaled.stdout.log {
+  size 10M
   rotate 3
   missingok
   copytruncate
