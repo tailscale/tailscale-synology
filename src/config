@@ -2,7 +2,7 @@
 	".url": {
 		"SYNO.SDS.Tailscale": {
 			"type": "url",
-			"version": "1.8.3",
+			"version": "1.18.1",
 			"allUsers": true,
 			"title": "Tailscale",
 			"icon": "PACKAGE_ICON_256.PNG",
