@@ -2,6 +2,7 @@
 - tailscale v1.18.1 static binaries (stable)
   [changelog](https://github.com/tailscale/tailscale/compare/v1.18.0...v1.18.1)  
   [v1.18.1 release notes](https://github.com/tailscale/tailscale/releases/tag/v1.18.1)  
+- Hide Tailscale for non admin users
 
 ## v1.18.0 (2021-11-18)
 - tailscale v1.18.0 static binaries (stable)
