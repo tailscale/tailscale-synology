@@ -8,6 +8,6 @@
     "relpath": "bin/tailscaled",
     "user": "package",
     "group": "package",
-    "capabilities": "cap_net_admin,cap_chown"
+    "capabilities": "cap_net_admin,cap_chown,cap_net_raw"
   }]
 }
