@@ -1,8 +1,8 @@
 name: CI
 
 permissions:
-  read: contents
-  write: packages
+  contents: read
+  packages: write
 
 on:
   push:
