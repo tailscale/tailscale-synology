@@ -11,14 +11,12 @@ PACKAGE_CENTER_VERSION=$6
 
 PRIVILEGE_FILE="src/privilege-dsm${DSM_VERSION}"
 LOGROTATE_FILE="src/logrotate-dsm${DSM_VERSION}"
+SPK_BUILD="${SPK_BUILD}${DSM_VERSION}"
 
 if [[ $DSM_VERSION -eq "7" ]]; then
-  SPK_BUILD=$(($SPK_BUILD + 2000))
   if [[ $PACKAGE_CENTER_VERSION == "true" ]]; then
     PRIVILEGE_FILE="src/privilege-dsm7.priv"
   fi
-else
-  SPK_BUILD=$(printf "%03d" $SPK_BUILD)
 fi
 
 # architecture taken from:

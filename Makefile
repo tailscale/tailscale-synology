@@ -1,7 +1,10 @@
 TAILSCALE_VERSION ?= "1.20.1"
-TAILSCALE_TRACK = "stable"
-# This needs to be monotinically increasing regardless of the TAILSCALE_VERSION
-SPK_BUILD = 17
+TAILSCALE_TRACK ?= "stable"
+# SPK_BUILD is derived from the TAILSCALE_VERSION using the forumla
+#   (major-1)*1e7 + minor*1e4 + patch*1e1 + dsm
+# e.g. for 1.20.1 (dsm7) => 200017
+# Note: The DSM version is appended by the build step.
+SPK_BUILD ?= 20001
 
 .PHONY: tailscale-% clean purge
 
