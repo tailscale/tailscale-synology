@@ -7,6 +7,7 @@ package main
 
 import (
 	"archive/tar"
+	"bufio"
 	"bytes"
 	"compress/gzip"
 	"embed"
@@ -19,7 +20,6 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
-	"regexp"
 	"strconv"
 	"strings"
 	"testing/fstest"
@@ -364,7 +364,17 @@ func bin(baseProg string, param spkParams) fileOpener {
 // buildBin builds baseProg ("tailscale" or "tailscaled")
 // and returns a fileOpener for it.
 func buildBin(baseProg string, param spkParams) fileOpener {
-	cmd := exec.Command("go", "install", "tailscale.com/cmd/"+baseProg)
+	vars, err := getDistVars(param.srcDir)
+	if err != nil {
+		return errLater(err)
+	}
+
+	cmd := exec.Command("go",
+		"install",
+		"-ldflags", ("-X tailscale.com/version.Long=" + vars.Long + " " +
+			"-X tailscale.com/version.Short=" + vars.Short + " " +
+			"-X tailscale.com/version.GitCommit=" + vars.GitHash),
+		"tailscale.com/cmd/"+baseProg)
 	cmd.Dir = param.srcDir
 	cmd.Env = param.goEnv()
 	out, err := cmd.CombinedOutput()
@@ -386,19 +396,50 @@ func buildBin(baseProg string, param spkParams) fileOpener {
 	return memFile(data, 0755, param.createTime)
 }
 
-func getShortVer(dir string) (ver string, err error) {
+type DistVars struct {
+	Minor   string // "1.21"
+	Short   string // "1.21.17"
+	Long    string // "1.21.17-tb4f817065"
+	GitHash string // "b4f8170657cde2a3a21ffee46c9dd028e400fb0f"
+}
+
+func getDistVars(dir string) (v DistVars, err error) {
 	cmd := exec.Command("./build_dist.sh", "shellvars")
 	cmd.Dir = dir
 	out, err := cmd.Output()
 	if err != nil {
-		return "", err
+		return v, err
 	}
-	re := regexp.MustCompile(`(?m)^VERSION_SHORT="(.+?)"`)
-	m := re.FindStringSubmatch(string(out))
-	if m == nil {
-		return "", fmt.Errorf("didn't find VERSION_SHORT in output: %s", out)
+	bs := bufio.NewScanner(bytes.NewReader(out))
+	for bs.Scan() {
+		k, qv, ok := stringsCut(strings.TrimSpace(bs.Text()), "=")
+		if !ok {
+			continue
+		}
+		var sp *string
+		switch k {
+		case "VERSION_MINOR":
+			sp = &v.Minor
+		case "VERSION_SHORT":
+			sp = &v.Short
+		case "VERSION_LONG":
+			sp = &v.Long
+		case "VERSION_GIT_HASH":
+			sp = &v.GitHash
+		}
+		if sp != nil {
+			*sp, err = strconv.Unquote(qv)
+			if err != nil {
+				return v, err
+			}
+		}
 	}
-	return m[1], nil
+	return v, bs.Err()
+}
+
+func getShortVer(dir string) (ver string, err error) {
+	vars, err := getDistVars(dir)
+	return vars.Short, err
 }
 
 // getInfo returns a fileOpener for the top-level INFO file.
@@ -457,4 +498,12 @@ func genInfo(param spkParams, extractedSize int64) ([]byte, error) {
 	add("extractsize", fmt.Sprintf("%v", extractedSize>>10)) // in KiB
 	return buf.Bytes(), nil
 
+}
+
+// stringsCut is strings.Cut from Go 1.18.
+func stringsCut(s, sep string) (before, after string, found bool) {
+	if i := strings.Index(s, sep); i >= 0 {
+		return s[:i], s[i+len(sep):], true
+	}
+	return s, "", false
 }
