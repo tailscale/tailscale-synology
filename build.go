@@ -11,7 +11,6 @@ import (
 	"bytes"
 	"compress/gzip"
 	"embed"
-	"errors"
 	"flag"
 	"fmt"
 	"io"
@@ -36,14 +35,13 @@ import (
 var srcFS embed.FS
 
 var (
-	version    = flag.String("version", "", `version number to build; "build" means to build locally; see --source`)
-	spkBuild   = flag.Int("spk-build", 15, `SPK build number; needs to be monotonically increasing regardless of the --version`)
-	dsmVersion = flag.String("dsm-version", "7", `DSM version(s) to build: 6, 7, or "all"`)
-	goarch     = flag.String("goarch", "amd64", `GOARCH to build package(s) for, "all`)
-	compress   = flag.String("compress", "", `compression option: "speed" or "size"; empty means automatic where local builds are fast but big`)
+	dsmVersion    = flag.String("dsm-version", "7", `DSM version(s) to build: 6, 7, or "all"`)
+	goarch        = flag.String("goarch", "amd64", `GOARCH to build package(s) for, "all`)
+	compress      = flag.String("compress", "speed", `compression option: "speed" or "size"; empty means automatic where local builds are fast but big`)
+	packageCenter = flag.Bool("for-package-center", false, `build for the package center`)
 
-	srcDir = flag.String("source", ".", "path to tailscale.com's go.mod directory root, when using --version=build")
-	output = flag.String("o", "", "output directory or path; if a directory, files are written there. If it ends in *.spk, the final is written to that name in --version=build mode")
+	srcDir = flag.String("source", ".", "path to tailscale.com's go.mod directory root")
+	output = flag.String("o", "", "output directory or path; if a directory, files are written there. If it ends in *.spk, the spk is written to that name")
 )
 
 // synPlat maps from GOARCH (or GOARCH/GOARM) to the Synology platform name(s).
@@ -52,32 +50,18 @@ var (
 // https://github.com/SynoCommunity/spksrc/wiki/Synology-and-SynoCommunity-Package-Architectures
 // https://github.com/SynologyOpenSource/pkgscripts-ng/tree/master/include platform.<PLATFORM> files
 var synPlat = map[string][]string{
-	"amd64": []string{"x86_64"},
-	"386":   []string{"i686"},
-	"arm64": []string{"armv8"},
-	"arm/5": []string{"armv5", "88f6281", "88f6282"},
-	"arm/7": []string{"armv7", "alpine", "armada370", "armada375", "armada38x", "armadaxp", "comcerto2k", "monaco", "hi3535"},
+	"amd64": {"x86_64"},
+	"386":   {"i686"},
+	"arm64": {"armv8"},
+	"arm/5": {"armv5", "88f6281", "88f6282"},
+	"arm/7": {"armv7", "alpine", "armada370", "armada375", "armada38x", "armadaxp", "comcerto2k", "monaco", "hi3535"},
 }
 
 func main() {
 	flag.Parse()
 
-	var doBuild bool
-	switch *version {
-	case "":
-		log.Fatalf("no --version")
-	case "build":
-		doBuild = true
-	default:
-		log.Fatalf("TODO: only --version=build is currently supported")
-	}
 	switch *compress {
 	case "size", "speed":
-	case "":
-		*compress = "size"
-		if doBuild {
-			*compress = "speed"
-		}
 	default:
 		log.Fatalf("invalid --compress value %q", *compress)
 	}
@@ -89,65 +73,62 @@ func main() {
 	case "6", "7":
 		dsms = append(dsms, int((*dsmVersion)[0]-'0'))
 	case "all":
-		if doBuild {
-			log.Fatalf("invalid --dsm=all in --version=build mode")
-		}
 		dsms = append(dsms, 6, 7)
 	}
-	if *goarch == "all" && doBuild {
-		log.Fatalf("invalid --goarch=all in --version=build mode")
+	var goarchs []string
+	if *goarch == "all" {
+		for goarch := range synPlat {
+			goarchs = append(goarchs, goarch)
+		}
+	} else {
+		if vv := synPlat[*goarch]; len(vv) == 0 {
+			log.Fatalf("unknown --goarch value %q", *goarch)
+		}
+		goarchs = append(goarchs, *goarch)
 	}
-	if strings.HasSuffix(*output, ".spk") && !doBuild {
-		log.Fatalf("-o value of *.spk only supported in --version=build mode")
-	}
-
-	shortVer := *version
-	if doBuild {
-		var err error
-		shortVer, err = getShortVer(*srcDir)
+	if len(goarchs) > 1 || len(dsms) > 1 {
+		fi, err := os.Stat(*output)
 		if err != nil {
 			log.Fatal(err)
 		}
-	}
-	var synoArch string
-	if vv := synPlat[*goarch]; len(vv) > 0 {
-		synoArch = vv[0]
-	} else {
-		log.Fatalf("unknown --goarch value %q", *goarch)
-	}
-	param := spkParams{
-		createTime:       time.Now(),
-		version:          shortVer,
-		spkBuildBase:     *spkBuild,
-		goarch:           *goarch,
-		synoArch:         synoArch,
-		dsm:              dsms[0],
-		forPackageCenter: false,
-		srcDir:           *srcDir,
+		if !fi.IsDir() {
+			log.Fatalf("%q is not a dir", *output)
+		}
 	}
 
-	file := param.filename()
-	out := param.outputFile()
-	log.Printf("Generating %v ...", file)
-	var buf bytes.Buffer
-	if err := genSPK(&buf, param); err != nil {
+	dv, err := getDistVars(*srcDir)
+	if err != nil {
 		log.Fatal(err)
 	}
-	if err := os.WriteFile(out, buf.Bytes(), 0644); err != nil {
+
+	commitTime, err := readCommitTime(*srcDir)
+	if err != nil {
 		log.Fatal(err)
 	}
-	if out != file {
-		log.Printf("Wrote %v as %v", file, out)
+
+	for _, goarch := range goarchs {
+		param := spkParams{
+			createTime:       commitTime,
+			version:          dv.MajorMinorPatch,
+			spkBuildBase:     dv.SPKBuild,
+			goarch:           goarch,
+			forPackageCenter: *packageCenter,
+			srcDir:           *srcDir,
+		}
+
+		for _, dsm := range dsms {
+			if err := genArchSPKs(param, dsm, synPlat[goarch]); err != nil {
+				log.Fatal(err)
+			}
+		}
 	}
 }
 
 type spkParams struct {
 	createTime       time.Time
-	spkBuildBase     int    // montonically increasing; the 2000 is added later
+	spkBuildBase     int    // derived from the short version.
 	version          string // "1.18.1", Tailscale short version
 	goarch           string // "amd64"
-	synoArch         string // "x86_64", etc
-	dsm              int    // 6, 7
 	forPackageCenter bool
 
 	// srcDir, if non-empty, means to use the "go" command to build
@@ -156,29 +137,41 @@ type spkParams struct {
 	srcDir string
 }
 
-func (p spkParams) spkBuild() int {
-	if p.dsm == 7 {
-		return 2000 + p.spkBuildBase
+func readCommitTime(dir string) (time.Time, error) {
+	cmd := exec.Command("git", "show", "--format=%ct", "--quiet")
+	cmd.Dir = dir
+	out, err := cmd.CombinedOutput()
+	if err != nil {
+		return time.Time{}, err
 	}
-	return p.spkBuildBase
+	unixString := strings.TrimSpace(string(out))
+	unix, err := strconv.ParseInt(unixString, 10, 64)
+	if err != nil {
+		return time.Time{}, err
+	}
+	return time.Unix(unix, 0), nil
 }
 
-func (p spkParams) spkVersion() string {
-	return fmt.Sprintf("%v-%v", p.version, p.spkBuild())
+func (p spkParams) spkBuild(dsm int) int {
+	return 10*p.spkBuildBase + dsm
+}
+
+func (p spkParams) versionDashBuild(dsm int) string {
+	return fmt.Sprintf("%v-%v", p.version, p.spkBuild(dsm))
 }
 
 // filename returns the SPK's base filename.
-func (p spkParams) filename() string {
+func (p spkParams) filename(dsm int, synoArch string) string {
 	return fmt.Sprintf("tailscale-%v-%v-dsm%v.spk",
-		p.synoArch,
-		p.spkVersion(),
-		p.dsm)
+		synoArch,
+		p.versionDashBuild(dsm),
+		dsm)
 }
 
 // outputFile returns the path to write the SPK out to based
 // on the -o flag value.
-func (p spkParams) outputFile() string {
-	base := p.filename()
+func (p spkParams) outputFile(dsm int, synoArch string) string {
+	base := p.filename(dsm, synoArch)
 	if *output == "" {
 		return base
 	}
@@ -189,38 +182,39 @@ func (p spkParams) outputFile() string {
 }
 
 func (p spkParams) goEnv() []string {
-	return append(os.Environ(),
+	const armPrefix = "arm/"
+	goarch := p.goarch
+	var goarm string
+	if strings.HasPrefix(goarch, armPrefix) {
+		goarm = strings.TrimPrefix(goarch, armPrefix)
+		goarch = "arm"
+	}
+	env := append(os.Environ(),
+		"CGO_ENABLED=0",
 		"GOOS=linux",
-		"GOARCH="+p.goarch,
-		// TODO: add GOARM, if we ever start building GOARM variants
+		"GOARCH="+goarch,
+		"GOARM="+goarm,
 	)
+	return env
 }
 
-// genSPK generates an SPK, which is a nested tarball.
-// The outer tar file is uncompressed and contains the minimal
-// metadata. The main contents are in the outer tar's "package.tgz"
-// entry, which is gzip or xz compressed.
-func genSPK(w io.Writer, param spkParams) error {
-	privFile := fmt.Sprintf("privilege-dsm%d", param.dsm)
-	if param.forPackageCenter {
-		privFile += ".priv"
-	}
-
-	var innerPkgTgz bytes.Buffer
-	extractedSize, err := genInnerPackageTgz(&innerPkgTgz, param)
+func genSPK(param spkParams, dsm int, synoArch string, extractedSize int64, privFile string, innerPackage []byte) error {
+	out := param.outputFile(dsm, synoArch)
+	log.Printf("Generating %v ...", filepath.Base(out))
+	w, err := os.OpenFile(out, os.O_CREATE|os.O_WRONLY, 0644)
 	if err != nil {
 		return err
 	}
-
+	defer w.Close()
 	return writeTar(w,
-		file("INFO", getInfo(param, extractedSize)),
+		file("INFO", getInfo(param, dsm, synoArch, extractedSize)),
 		file("PACKAGE_ICON.PNG", static("PACKAGE_ICON.PNG")),
 		file("PACKAGE_ICON_256.PNG", static("PACKAGE_ICON_256.PNG")),
 		file("Tailscale.sc", static("Tailscale.sc")),
 		dir("conf/", param.createTime),
 		file("conf/resource", static("resource")),
 		file("conf/privilege", static(privFile)),
-		file("package.tgz", memFile(innerPkgTgz.Bytes(), 0644, param.createTime)),
+		file("package.tgz", memFile(innerPackage, 0644, param.createTime)),
 		dir("scripts/", param.createTime),
 		file("scripts/start-stop-status", static("scripts/start-stop-status")),
 		file("scripts/postupgrade", static("scripts/postupgrade")),
@@ -228,7 +222,35 @@ func genSPK(w io.Writer, param spkParams) error {
 	)
 }
 
-func genInnerPackageTgz(w io.Writer, param spkParams) (extractedSize int64, err error) {
+// genArchSPKs generates SPKs for a particular DSM version.
+// This function generates one spk per synoArch.
+// SPKs are nested tarballs.
+// The outer tar file is uncompressed and contains the minimal
+// metadata. The main contents are in the outer tar's "package.tgz"
+// entry, which is gzip or xz compressed.
+func genArchSPKs(param spkParams, dsm int, synoArchs []string) error {
+	var innerPkgTgz bytes.Buffer
+	extractedSize, err := genInnerPackageTgz(&innerPkgTgz, param, dsm)
+	if err != nil {
+		return err
+	}
+
+	privFile := fmt.Sprintf("privilege-dsm%d", dsm)
+	if param.forPackageCenter {
+		privFile += ".priv"
+	}
+
+	innerPackageBytes := innerPkgTgz.Bytes()
+
+	for _, synoArch := range synoArchs {
+		if err := genSPK(param, dsm, synoArch, extractedSize, privFile, innerPackageBytes); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+func genInnerPackageTgz(w io.Writer, param spkParams, dsm int) (extractedSize int64, err error) {
 	var wc io.WriteCloser
 	switch *compress {
 	case "speed":
@@ -244,15 +266,15 @@ func genInnerPackageTgz(w io.Writer, param spkParams) (extractedSize int64, err 
 	}
 	err = writeTar(io.MultiWriter(writeByteCounter{&extractedSize}, wc),
 		dir("bin/", param.createTime),
-		file("bin/tailscaled", bin("tailscaled", param)),
-		file("bin/tailscale", bin("tailscale", param)),
+		file("bin/tailscaled", buildBin("tailscaled", param)),
+		file("bin/tailscale", buildBin("tailscale", param)),
 		dir("conf/", param.createTime),
 		file("conf/Tailscale.sc", static("Tailscale.sc")),
-		file("conf/logrotate.conf", static("logrotate-dsm"+strconv.Itoa(param.dsm))),
+		file("conf/logrotate.conf", static("logrotate-dsm"+strconv.Itoa(dsm))),
 		dir("ui/", param.createTime),
 		file("ui/PACKAGE_ICON_256.PNG", static("PACKAGE_ICON_256.PNG")),
-		file("ui/index.cgi", bin("tailscale", param)), // TODO: don't build it again, don't include it twice
-		file("ui/config", static("config")),           // TODO: this has "1.8.3" hard-coded in it; why? what is it? bug?
+		file("ui/config", static("config")), // TODO: this has "1.8.3" hard-coded in it; why? what is it? bug?
+		file("ui/index.cgi", static("index.cgi")),
 	)
 	if err != nil {
 		return 0, err
@@ -351,14 +373,42 @@ func errLater(err error) fileOpener {
 	}
 }
 
-// bin returns a fileOpener for either the "tailscale" or "tailscaled"
-// baseProg binary, building it or downloading it from pkgs.tailscale.com as
-// necessary.
-func bin(baseProg string, param spkParams) fileOpener {
-	if param.srcDir == "" {
-		return errLater(errors.New("TODO: download binaries from pkgs.tailscale.com"))
+// compileGoBinary compiles the binary to a temp file and returns the path.
+// Cleaning up the file is the responsibility of caller.
+// TODO: This is the same as the one github.com/tailscale/mkctr, share somehow?
+func compileGoBinary(dir, gopath string, env []string, ldflags, gotags string) (string, error) {
+	f, err := os.CreateTemp("", "out")
+	if err != nil {
+		return "", err
 	}
-	return buildBin(baseProg, param)
+	out := f.Name()
+	if err := f.Close(); err != nil {
+		return "", err
+	}
+	args := []string{
+		"build",
+		"-v",
+		"-trimpath",
+	}
+	if len(gotags) > 0 {
+		args = append(args, "--tags="+gotags)
+	}
+	if len(ldflags) > 0 {
+		args = append(args, "--ldflags="+ldflags)
+	}
+	args = append(args,
+		"-o="+out,
+		gopath,
+	)
+	cmd := exec.Command("go", args...)
+	cmd.Dir = dir
+	cmd.Env = env
+	cmd.Stdout = os.Stdout
+	cmd.Stderr = os.Stderr
+	if err := cmd.Run(); err != nil {
+		return "", err
+	}
+	return out, nil
 }
 
 // buildBin builds baseProg ("tailscale" or "tailscaled")
@@ -368,39 +418,29 @@ func buildBin(baseProg string, param spkParams) fileOpener {
 	if err != nil {
 		return errLater(err)
 	}
-
-	cmd := exec.Command("go",
-		"install",
-		"-ldflags", ("-X tailscale.com/version.Long=" + vars.Long + " " +
-			"-X tailscale.com/version.Short=" + vars.Short + " " +
-			"-X tailscale.com/version.GitCommit=" + vars.GitHash),
-		"tailscale.com/cmd/"+baseProg)
-	cmd.Dir = param.srcDir
-	cmd.Env = param.goEnv()
-	out, err := cmd.CombinedOutput()
+	ldflags := "-X tailscale.com/version.Long=" + vars.Long + " " +
+		"-X tailscale.com/version.Short=" + vars.MajorMinorPatch + " " +
+		"-X tailscale.com/version.GitCommit=" + vars.GitHash
+	name, err := compileGoBinary(param.srcDir, "tailscale.com/cmd/"+baseProg, param.goEnv(), ldflags, "")
 	if err != nil {
-		return errLater(fmt.Errorf("building %s: %v, %s", baseProg, err, out))
+		return errLater(err)
 	}
-	cmd = exec.Command("go", "list", "-f", "{{.Target}}", "tailscale.com/cmd/"+baseProg)
-	cmd.Dir = param.srcDir
-	cmd.Env = param.goEnv()
-	out, err = cmd.Output()
+	data, err := os.ReadFile(name)
 	if err != nil {
-		return errLater(fmt.Errorf("running go list: %v", err))
+		return errLater(err)
 	}
-	binName := strings.TrimSpace(string(out))
-	data, err := os.ReadFile(binName)
-	if err != nil {
+	if err := os.Remove(name); err != nil {
 		return errLater(err)
 	}
 	return memFile(data, 0755, param.createTime)
 }
 
 type DistVars struct {
-	Minor   string // "1.21"
-	Short   string // "1.21.17"
-	Long    string // "1.21.17-tb4f817065"
-	GitHash string // "b4f8170657cde2a3a21ffee46c9dd028e400fb0f"
+	MajorMinor      string // "1.21"
+	MajorMinorPatch string // "1.21.17"
+	Long            string // "1.21.17-tb4f817065"
+	GitHash         string // "b4f8170657cde2a3a21ffee46c9dd028e400fb0f"
+	SPKBuild        int    // 210017
 }
 
 func getDistVars(dir string) (v DistVars, err error) {
@@ -419,9 +459,9 @@ func getDistVars(dir string) (v DistVars, err error) {
 		var sp *string
 		switch k {
 		case "VERSION_MINOR":
-			sp = &v.Minor
+			sp = &v.MajorMinor
 		case "VERSION_SHORT":
-			sp = &v.Short
+			sp = &v.MajorMinorPatch
 		case "VERSION_LONG":
 			sp = &v.Long
 		case "VERSION_GIT_HASH":
@@ -434,18 +474,33 @@ func getDistVars(dir string) (v DistVars, err error) {
 			}
 		}
 	}
-	return v, bs.Err()
-}
-
-func getShortVer(dir string) (ver string, err error) {
-	vars, err := getDistVars(dir)
-	return vars.Short, err
+	if err := bs.Err(); err != nil {
+		return v, err
+	}
+	parts := strings.Split(v.MajorMinorPatch, ".")
+	if len(parts) != 3 {
+		return v, fmt.Errorf("unexpected version: %v", v.MajorMinorPatch)
+	}
+	major, err := strconv.Atoi(parts[0])
+	if err != nil {
+		return v, err
+	}
+	minor, err := strconv.Atoi(parts[1])
+	if err != nil {
+		return v, err
+	}
+	patch, err := strconv.Atoi(parts[2])
+	if err != nil {
+		return v, err
+	}
+	v.SPKBuild = (major-1)*1e6 + minor*1e3 + patch
+	return v, nil
 }
 
 // getInfo returns a fileOpener for the top-level INFO file.
 // See genInfo.
-func getInfo(param spkParams, extractedSize int64) fileOpener {
-	data, err := genInfo(param, extractedSize)
+func getInfo(param spkParams, dsm int, synoArch string, extractedSize int64) fileOpener {
+	data, err := genInfo(param, dsm, synoArch, extractedSize)
 	if err != nil {
 		return func() (fs.File, error) { return nil, err }
 	}
@@ -469,14 +524,14 @@ os_min_ver="7.0-40000"
 os_max_ver=""
 extractsize="42368"
 */
-func genInfo(param spkParams, extractedSize int64) ([]byte, error) {
+func genInfo(param spkParams, dsm int, synoArch string, extractedSize int64) ([]byte, error) {
 	var buf bytes.Buffer
 	add := func(k, v string) {
 		fmt.Fprintf(&buf, "%s=%q\n", k, v)
 	}
 	add("package", "Tailscale")
-	add("version", param.spkVersion())
-	add("arch", param.synoArch)
+	add("version", param.versionDashBuild(dsm))
+	add("arch", synoArch)
 	add("description", "Connect all your devices using WireGuard, without the hassle.")
 	add("displayname", "Tailscale")
 	add("maintainer", "Tailscale, Inc.")
@@ -485,7 +540,7 @@ func genInfo(param spkParams, extractedSize int64) ([]byte, error) {
 	add("dsmuidir", "ui")
 	add("dsmappname", "SYNO.SDS.Tailscale")
 	add("startstop_restart_services", "nginx")
-	switch param.dsm {
+	switch dsm {
 	case 6:
 		add("os_min_ver", "6.0.1-7445")
 		add("os_max_ver", "7.0-40000")
@@ -493,7 +548,7 @@ func genInfo(param spkParams, extractedSize int64) ([]byte, error) {
 		add("os_min_ver", "7.0-40000")
 		add("os_max_ver", "")
 	default:
-		return nil, fmt.Errorf("unsupported DSM version '%v'", param.dsm)
+		return nil, fmt.Errorf("unsupported DSM version '%v'", dsm)
 	}
 	add("extractsize", fmt.Sprintf("%v", extractedSize>>10)) // in KiB
 	return buf.Bytes(), nil
