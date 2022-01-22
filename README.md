@@ -16,14 +16,12 @@ This repo's issue tracker is disabled. (And all historical issues have been move
 
 ## Installation
 
-1.  Download precompiled [releases](https://github.com/tailscale/tailscale-synology/releases) from the page for SPKs for your platform. 
+1.  Download precompiled [releases](https://pkgs.tailscale.com) from the page for SPKs for your platform.
 2.  In the Synology DSM web admin UI, open the Package Center.
 3.  Press the *Manual install* button and provide the SPK file.
 4.  Follow the wizard until done.
 5.  At this point `tailscaled` should be up and running.
 6.  SSH into the  machine, and run `sudo tailscale up` so you can authenticate.
-
-> **_NOTE:_** If there is no SPK for your platform, you have to compile it yourself using the instructions [below](https://github.com/tailscale/tailscale-synology#making-packages).
 
 ## Upgrading
 
@@ -39,17 +37,16 @@ If in doubt, check the [synology model list](docs/platforms.md) for the matching
 
 ## Making packages
 
-This project builds Synology packages "by hand", based on pre-compiled tailscale static binaries.
+This project hosts the machinery to build Tailscale Synology packages.
 
-You can build the packages using `make`
+You can build the packages using `make spkall` from the github.com/tailscale/tailscale repo
 ```bash
-git clone https://github.com/tailscale/tailscale-synology.git
-cd tailscale-synology/
-make
+git clone https://github.com/tailscale/tailscale.git
+cd tailscale
+make spkall
 ```
 If everything worked you should have a directory called `spks` that contains your SPK files.
 
-> **_NOTE:_** For building on macOS the GNU core utilites are required. Homebrew users can run `brew install coreutils` and set the `PATH` variable accordingly.
 
 ## Credits and References
 
