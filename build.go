@@ -34,9 +34,13 @@ import (
 //go:embed src/*
 var srcFS embed.FS
 
+var staticIsExecutable = map[string]bool{
+	"index.cgi": true,
+}
+
 var (
 	dsmVersion    = flag.String("dsm-version", "7", `DSM version(s) to build: 6, 7, or "all"`)
-	goarch        = flag.String("goarch", "amd64", `GOARCH to build package(s) for, "all`)
+	goarch        = flag.String("goarch", "amd64", `GOARCH to build package(s) for, or "all"`)
 	compress      = flag.String("compress", "speed", `compression option: "speed" or "size"; empty means automatic where local builds are fast but big`)
 	packageCenter = flag.Bool("for-package-center", false, `build for the package center`)
 
@@ -348,9 +352,39 @@ func file(name string, open fileOpener) tarEntry {
 
 func static(name string) fileOpener {
 	return func() (fs.File, error) {
-		return srcFS.Open("src/" + name)
+		f, err := srcFS.Open("src/" + name)
+		if err != nil {
+			return nil, err
+		}
+		mode := fs.FileMode(0644)
+		if staticIsExecutable[name] {
+			mode |= 0111
+		}
+		return modeFile{f, mode}, nil
 	}
 }
+
+// modeFile is an fs.File wrapper modifying the Stat's FileInfo Mode.
+type modeFile struct {
+	fs.File
+	mode fs.FileMode
+}
+
+func (f modeFile) Stat() (fs.FileInfo, error) {
+	fi, err := f.File.Stat()
+	if err != nil {
+		return nil, err
+	}
+	return modeInfo{fi, f.mode}, nil
+}
+
+// modeInfo is a fs.FileInfo wrapper modifying the Mode.
+type modeInfo struct {
+	fs.FileInfo
+	mode fs.FileMode
+}
+
+func (fi modeInfo) Mode() fs.FileMode { return fi.mode }
 
 func memFile(data []byte, mode fs.FileMode, modTime time.Time) fileOpener {
 	// Round the time down to a second so a tar entry can't be
