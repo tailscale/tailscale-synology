@@ -1,8 +1,5 @@
 name: CI
 
-permissions:
-  contents: write
-
 on:
   push:
     branches: [main]
@@ -17,14 +14,19 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          path: tailscale-synology
+      - name: Checkout tailscale/tailscale
+        uses: actions/checkout@v2
+        with:
+          ref: main
+          repository: tailscale/tailscale
+          path: tailscale
       - name: make packages
-        run: make
-      
-      - name: Release
-        uses: fnkr/github-action-ghr@v1
-        if: startsWith(github.ref, 'refs/tags/')
-        env:
-          GHR_PATH: spks/
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          export PATH="${PWD}/tailscale/tool:${PATH}"
+          cd tailscale-synology
+          mkdir -p spks
+          go run build.go -o spks --source=../tailscale --goarch=all --dsm-version=all
