@@ -240,7 +240,7 @@ func genArchSPKs(param spkParams, dsm int, synoArchs []string) error {
 	}
 
 	privFile := fmt.Sprintf("privilege-dsm%d", dsm)
-	if param.forPackageCenter {
+	if param.forPackageCenter && dsm > 6 {
 		privFile += ".priv"
 	}
 
