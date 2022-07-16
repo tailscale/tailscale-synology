@@ -10,12 +10,11 @@ fi
 
 PID_FILE="${PKGVAR}/tailscaled.pid"
 LOG_FILE="${PKGVAR}/tailscaled.stdout.log"
-STATE_FILE="${PKGVAR}/tailscaled.state"
 SOCKET_FILE="${PKGVAR}/tailscaled.sock"
 PORT="41641"
 
 SERVICE_COMMAND="${SYNOPKG_PKGDEST}/bin/tailscaled \
---state=${STATE_FILE} \
+--statedir=${PKGVAR} \
 --socket=${SOCKET_FILE} \
 --port=$PORT"
 
