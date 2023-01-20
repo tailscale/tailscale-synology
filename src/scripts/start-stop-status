@@ -31,7 +31,7 @@ fi
 start_daemon() {
     local ts=$(date --iso-8601=second)
     echo "${ts} Starting ${SERVICE_NAME} with: ${SERVICE_COMMAND}" >${LOG_FILE}
-    STATE_DIRECTORY=${PKGVAR} ${SERVICE_COMMAND} >>${LOG_FILE} 2>&1 &
+    STATE_DIRECTORY=${PKGVAR} ${SERVICE_COMMAND} 2>&1 | sed -u '1,200p;201s,.*,[further tailscaled logs suppressed],p;d' >>${LOG_FILE} &
     echo "$!" >"${PID_FILE}"
 }
 
