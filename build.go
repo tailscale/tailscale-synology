@@ -452,9 +452,9 @@ func buildBin(baseProg string, param spkParams) fileOpener {
 	if err != nil {
 		return errLater(err)
 	}
-	ldflags := "-X tailscale.com/version.Long=" + vars.Long + " " +
-		"-X tailscale.com/version.Short=" + vars.MajorMinorPatch + " " +
-		"-X tailscale.com/version.GitCommit=" + vars.GitHash
+	ldflags := "-X tailscale.com/version.longStamp=" + vars.Long + " " +
+		"-X tailscale.com/version.shortStamp=" + vars.MajorMinorPatch + " " +
+		"-X tailscale.com/version.gitCommitStamp=" + vars.GitHash
 	name, err := compileGoBinary(param.srcDir, "tailscale.com/cmd/"+baseProg, param.goEnv(), ldflags, "")
 	if err != nil {
 		return errLater(err)
