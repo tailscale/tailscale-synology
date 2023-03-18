@@ -57,8 +57,8 @@ var synPlat = map[string][]string{
 	"amd64": {"x86_64"},
 	"386":   {"i686"},
 	"arm64": {"armv8"},
-	"arm/5": {"armv5", "88f6281", "88f6282"},
-	"arm/7": {"armv7", "alpine", "armada370", "armada375", "armada38x", "armadaxp", "comcerto2k", "monaco", "hi3535"},
+	"arm/5": {"armv5", "88f6281", "88f6282", "hi3535"},
+	"arm/7": {"armv7", "alpine", "armada370", "armada375", "armada38x", "armadaxp", "comcerto2k", "monaco"},
 }
 
 func main() {
@@ -146,7 +146,7 @@ func readCommitTime(dir string) (time.Time, error) {
 	cmd.Dir = dir
 	out, err := cmd.CombinedOutput()
 	if err != nil {
-		return time.Time{}, err
+		return time.Time{}, fmt.Errorf("readCommitTime: %w", err)
 	}
 	unixString := strings.TrimSpace(string(out))
 	unix, err := strconv.ParseInt(unixString, 10, 64)
@@ -440,7 +440,7 @@ func compileGoBinary(dir, gopath string, env []string, ldflags, gotags string) (
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
 	if err := cmd.Run(); err != nil {
-		return "", err
+		return "", fmt.Errorf("compileGoBinary: %w", err)
 	}
 	return out, nil
 }
@@ -480,9 +480,9 @@ type DistVars struct {
 func getDistVars(dir string) (v DistVars, err error) {
 	cmd := exec.Command("./build_dist.sh", "shellvars")
 	cmd.Dir = dir
-	out, err := cmd.Output()
+	out, err := cmd.CombinedOutput()
 	if err != nil {
-		return v, err
+		return v, fmt.Errorf("getDistVars: %w, %s", err, out)
 	}
 	bs := bufio.NewScanner(bytes.NewReader(out))
 	for bs.Scan() {
