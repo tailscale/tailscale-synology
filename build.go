@@ -157,7 +157,7 @@ func readCommitTime(dir string) (time.Time, error) {
 }
 
 func (p spkParams) spkBuild(dsm int) int {
-	return 10*p.spkBuildBase + dsm
+	return dsm*1e8 + p.spkBuildBase
 }
 
 func (p spkParams) versionDashBuild(dsm int) string {
