@@ -32,7 +32,9 @@ start_daemon() {
     local ts=$(date --iso-8601=second)
     echo "${ts} Starting ${SERVICE_NAME} with: ${SERVICE_COMMAND}" >${LOG_FILE}
     STATE_DIRECTORY=${PKGVAR} ${SERVICE_COMMAND} 2>&1 | sed -u '1,200p;201s,.*,[further tailscaled logs suppressed],p;d' >>${LOG_FILE} &
-    echo "$!" >"${PID_FILE}"
+    # We pipe tailscaled's output to sed, so "$!" retrieves the PID of sed not tailscaled.
+    # Use jobs -p to retrieve the PID of the most recent process group leader.
+    jobs -p >"${PID_FILE}"
 }
 
 stop_daemon() {
