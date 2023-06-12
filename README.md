@@ -27,6 +27,12 @@ go run ./cmd/dist build synology
 If everything worked you should have a directory called `dist` that
 contains SPK files for all supported NASes and DSM versions.
 
+## Precompiled packages
+Tailscale also makes precompiled packages available for DSM6 and DSM7, supporting a variety of architectures.
+
+ - [Stable](https://pkgs.tailscale.com/stable/#spks): stable releases. If you're not sure which track to use, pick this one.
+ - [Unstable](https://pkgs.tailscale.com/unstable/#spks): the bleeding edge. Pushed early and often. Expect rough edges!
+
 ## Compatibility
 
 The package is confirmed to be working on various Synology models. For
